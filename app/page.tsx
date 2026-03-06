@@ -5,12 +5,12 @@ export default function Home() {
     <div className="min-h-dvh bg-white dark:bg-zinc-950">
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-20 sm:py-28">
         <div className="flex flex-col gap-5">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[color:var(--accent)/40] bg-[color:var(--accent)/10] px-3 py-1 text-xs font-medium text-[color:var(--accent)] shadow-sm">
             Kashvi Framework
-            <span className="text-zinc-400 dark:text-zinc-500">·</span>
+            <span className="text-[color:var(--accent)/70]">·</span>
             Documentation
           </div>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
+          <h1 className="text-balance text-5xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-6xl">
             Build production-grade Go APIs with Kashvi.
           </h1>
           <p className="max-w-2xl text-pretty text-lg leading-8 text-zinc-600 dark:text-zinc-300">
@@ -21,13 +21,13 @@ export default function Home() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/docs"
-              className="inline-flex h-11 items-center justify-center rounded-full bg-zinc-950 px-5 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-[color:var(--accent)] px-5 text-sm font-semibold text-[var(--accent-foreground)] hover:bg-[color:var(--accent)/90]"
             >
               Open Docs
             </Link>
             <Link
               href="/docs/installation"
-              className="inline-flex h-11 items-center justify-center rounded-full border border-zinc-200 bg-white px-5 text-sm font-semibold text-zinc-950 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+              className="inline-flex h-11 items-center justify-center rounded-full border border-[color:var(--accent)/50] bg-white px-5 text-sm font-semibold text-[color:var(--accent)] hover:bg-[color:var(--accent)/10] dark:border-[color:var(--accent)/30] dark:bg-zinc-950 dark:text-[color:var(--accent)] dark:hover:bg-[color:var(--accent)/20]"
             >
               Quick Start
             </Link>
@@ -43,7 +43,7 @@ export default function Home() {
               Install the CLI, create a project, and ship your first resource.
             </div>
             <div className="mt-4">
-              <Link href="/docs/installation" className="text-sm">
+              <Link href="/docs/installation" className="text-sm accent-text hover:underline">
                 Go to Installation →
               </Link>
             </div>
@@ -57,7 +57,7 @@ export default function Home() {
               more.
             </div>
             <div className="mt-4">
-              <Link href="/docs/cli" className="text-sm">
+              <Link href="/docs/cli" className="text-sm accent-text hover:underline">
                 Go to CLI Reference →
               </Link>
             </div>

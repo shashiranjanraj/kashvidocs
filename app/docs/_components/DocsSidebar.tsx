@@ -16,7 +16,7 @@ export function DocsSidebar() {
     <nav className="flex flex-col gap-6">
       {docsNav.map((group) => (
         <div key={group.title} className="flex flex-col gap-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <div className="text-xs font-semibold uppercase tracking-wide text-[color:var(--accent)] dark:text-[color:var(--accent)/70]">
             {group.title}
           </div>
           <div className="flex flex-col gap-1">
@@ -29,7 +29,7 @@ export function DocsSidebar() {
                   className={[
                     "rounded-lg px-3 py-2 text-sm transition",
                     active
-                      ? "bg-zinc-100 font-semibold text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50"
+                      ? "pl-3 border-l-2 border-[color:var(--accent)] bg-[color:var(--accent)/10] font-semibold text-[color:var(--accent)]"
                       : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50",
                   ].join(" ")}
                 >

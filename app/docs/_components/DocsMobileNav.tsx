@@ -23,7 +23,7 @@ export function DocsMobileNav() {
         type="button"
         aria-label="Open navigation"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-950 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900 lg:hidden"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--accent)/40] bg-white text-[color:var(--accent)] hover:bg-[color:var(--accent)/10] dark:border-[color:var(--accent)/30] dark:bg-zinc-950 dark:text-[color:var(--accent)] dark:hover:bg-[color:var(--accent)/20] lg:hidden"
       >
         <span className="sr-only">Menu</span>
         <svg
@@ -62,7 +62,7 @@ export function DocsMobileNav() {
                 type="button"
                 aria-label="Close navigation"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-950 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--accent)/40] bg-white text-[color:var(--accent)] hover:bg-[color:var(--accent)/10] dark:border-[color:var(--accent)/30] dark:bg-zinc-950 dark:text-[color:var(--accent)] dark:hover:bg-[color:var(--accent)/20]"
               >
                 <svg
                   width="18"

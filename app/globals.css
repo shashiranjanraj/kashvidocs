@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* base colors */
+  --background: #f9fafb; /* light gray background for a softer feel */
+  --foreground: #111827; /* almost-black text for good contrast */
+
+  /* accent palette */
+  --accent: #6366f1; /* indigo-500 */
+  --accent-foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -38,6 +44,8 @@ body {
 @layer components {
   .docs-shell {
     @apply bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
   .docs-content {
@@ -45,19 +53,24 @@ body {
   }
 
   .docs-content h1 {
-    @apply mt-0 scroll-mt-20 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50;
+    @apply mt-0 scroll-mt-20 text-4xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50;
   }
   .docs-content h2 {
-    @apply mt-10 scroll-mt-20 border-b border-zinc-200 pb-2 text-xl font-semibold tracking-tight text-zinc-950 dark:border-zinc-800 dark:text-zinc-50;
+    /* accent underline for section titles */
+    @apply mt-10 scroll-mt-20 pb-2 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--accent);
   }
   .docs-content h3 {
     @apply mt-8 scroll-mt-20 text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50;
   }
   .docs-content p {
     @apply mt-4;
+    line-height: 1.75;
   }
   .docs-content a {
-    @apply font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-100 dark:hover:text-white;
+    @apply font-medium underline underline-offset-4;
+    color: var(--accent);
   }
   .docs-content ul {
     @apply mt-4 list-disc pl-6;
@@ -83,7 +96,8 @@ body {
   }
 
   .docs-card {
-    @apply rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700;
+    @apply rounded-3xl border border-zinc-200 bg-white p-6 shadow-lg transition-transform duration-200 hover:scale-[1.02] hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-950;
+    background-color: var(--background);
   }
 }
 
@@ -92,4 +106,14 @@ body {
 .terminal-codeblock .token {
   color: white !important;
   background: transparent !important;
+}
+
+/* accent helpers */
+.accent-text {
+  color: var(--accent) !important;
+}
+
+.accent-bg {
+  background-color: var(--accent) !important;
+  color: var(--accent-foreground) !important;
 }
