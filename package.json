@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/prismjs": "^1.26.6",
+    "@vercel/analytics": "^1.6.1",
     "next": "16.1.6",
     "prismjs": "^1.30.0",
     "react": "19.2.3",
