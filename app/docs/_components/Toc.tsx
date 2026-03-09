@@ -27,21 +27,19 @@ export function Toc() {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
+    // slight delay to let content render
+    setTimeout(() => {
+      setItems(getHeadings());
+    }, 100);
+
     const root = document.querySelector<HTMLElement>('article[data-doc="true"]');
     if (!root) return;
 
     const update = () => setItems(getHeadings());
-    const raf = requestAnimationFrame(update);
+    const mo = new MutationObserver(update);
+    mo.observe(root, { childList: true, subtree: true });
 
-    const mo = new MutationObserver(() => {
-      requestAnimationFrame(update);
-    });
-    mo.observe(root, { childList: true, subtree: true, characterData: true });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      mo.disconnect();
-    };
+    return () => mo.disconnect();
   }, []);
 
   const ids = useMemo(() => items.map((i) => i.id), [items]);
@@ -57,27 +55,29 @@ export function Toc() {
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: "-20% 0px -70% 0px", threshold: [0.1, 1] },
+      { rootMargin: "-80px 0px -70% 0px", threshold: [0, 1] },
     );
 
-    for (const id of ids) {
+    ids.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
-    }
+    });
 
     return () => observer.disconnect();
   }, [ids]);
 
   if (items.length === 0) {
     return (
-      <div className="text-sm text-zinc-500 dark:text-zinc-400">
-        No headings.
+      <div className="text-sm text-zinc-500 italic dark:text-zinc-500">
+        No headings found on this page.
       </div>
     );
   }
 
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className="flex flex-col relative text-[13px]">
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800" />
+
       {items.map((i) => {
         const active = i.id === activeId;
         return (
@@ -85,13 +85,16 @@ export function Toc() {
             key={i.id}
             href={`#${i.id}`}
             className={[
-              "rounded-md px-2 py-1 text-sm transition",
+              "relative pl-4 py-1.5 transition-all duration-200 hover:text-zinc-900 dark:hover:text-zinc-100",
               i.level === 3 ? "ml-2" : "",
               active
-                ? "bg-zinc-100 font-semibold text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50"
-                : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50",
+                ? "font-semibold text-indigo-600 dark:text-indigo-400"
+                : "text-zinc-500 dark:text-zinc-400",
             ].join(" ")}
           >
+            {active && (
+              <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+            )}
             {i.title}
           </a>
         );
@@ -99,4 +102,3 @@ export function Toc() {
     </nav>
   );
 }
-

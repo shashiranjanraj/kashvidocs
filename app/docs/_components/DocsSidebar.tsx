@@ -13,34 +13,34 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-6">
+    <nav className="flex flex-col gap-8">
       {docsNav.map((group) => (
-        <div key={group.title} className="flex flex-col gap-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-[color:var(--accent)] dark:text-[color:var(--accent)/70]">
+        <div key={group.title} className="flex flex-col gap-3">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100 pl-4 text-gradient">
             {group.title}
-          </div>
-          <div className="flex flex-col gap-1">
+          </h3>
+          <ul className="flex flex-col gap-1.5 border-l border-zinc-300/50 dark:border-zinc-700/50 ml-0">
             {group.items.map((item) => {
               const active = isActive(pathname, item.href);
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={[
-                    "rounded-lg px-3 py-2 text-sm transition",
-                    active
-                      ? "pl-3 border-l-2 border-[color:var(--accent)] bg-[color:var(--accent)/10] font-semibold text-[color:var(--accent)]"
-                      : "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50",
-                  ].join(" ")}
-                >
-                  {item.title}
-                </Link>
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={[
+                      "group relative flex w-full items-center rounded-r-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 border-l-2",
+                      active
+                        ? "border-l-indigo-500 bg-gradient-to-r from-indigo-50 to-transparent dark:from-indigo-950/40 dark:to-transparent text-indigo-700 dark:text-indigo-300 font-semibold shadow-sm"
+                        : "border-l-transparent text-zinc-600 dark:text-zinc-400 hover:border-l-indigo-300 dark:hover:border-l-indigo-600 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 hover:text-zinc-900 dark:hover:text-zinc-200 transition-all",
+                    ].join(" ")}
+                  >
+                    <span className="relative z-10">{item.title}</span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
       ))}
     </nav>
   );
 }
-

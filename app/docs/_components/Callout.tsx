@@ -1,23 +1,43 @@
 import type { ReactNode } from "react";
 
 const styles: Record<
-  "note" | "tip" | "caution",
-  { wrapper: string; title: string }
+  "note" | "tip" | "caution" | "warning" | "success",
+  { 
+    wrapper: string
+    title: string
+    icon: string
+    border: string
+  }
 > = {
   note: {
-    wrapper:
-      "border-zinc-200 bg-zinc-50 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-300",
-    title: "text-zinc-950 dark:text-zinc-50",
+    wrapper: "bg-gradient-to-br from-blue-50 to-blue-50/50 dark:from-blue-950/30 dark:to-blue-950/10 text-blue-900 dark:text-blue-100",
+    title: "text-blue-950 dark:text-blue-100 font-semibold",
+    icon: "ℹ️",
+    border: "border-l-4 border-blue-400 dark:border-blue-600",
   },
   tip: {
-    wrapper:
-      "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-100",
-    title: "text-emerald-950 dark:text-emerald-50",
+    wrapper: "bg-gradient-to-br from-emerald-50 to-emerald-50/50 dark:from-emerald-950/30 dark:to-emerald-950/10 text-emerald-900 dark:text-emerald-100",
+    title: "text-emerald-950 dark:text-emerald-100 font-semibold",
+    icon: "💡",
+    border: "border-l-4 border-emerald-400 dark:border-emerald-600",
   },
   caution: {
-    wrapper:
-      "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-50",
-    title: "text-amber-950 dark:text-amber-50",
+    wrapper: "bg-gradient-to-br from-amber-50 to-amber-50/50 dark:from-amber-950/30 dark:to-amber-950/10 text-amber-900 dark:text-amber-100",
+    title: "text-amber-950 dark:text-amber-100 font-semibold",
+    icon: "⚠️",
+    border: "border-l-4 border-amber-400 dark:border-amber-600",
+  },
+  warning: {
+    wrapper: "bg-gradient-to-br from-red-50 to-red-50/50 dark:from-red-950/30 dark:to-red-950/10 text-red-900 dark:text-red-100",
+    title: "text-red-950 dark:text-red-100 font-semibold",
+    icon: "🚨",
+    border: "border-l-4 border-red-400 dark:border-red-600",
+  },
+  success: {
+    wrapper: "bg-gradient-to-br from-green-50 to-green-50/50 dark:from-green-950/30 dark:to-green-950/10 text-green-900 dark:text-green-100",
+    title: "text-green-950 dark:text-green-100 font-semibold",
+    icon: "✓",
+    border: "border-l-4 border-green-400 dark:border-green-600",
   },
 };
 
@@ -26,15 +46,20 @@ export function Callout({
   title,
   children,
 }: {
-  type?: "note" | "tip" | "caution";
+  type?: "note" | "tip" | "caution" | "warning" | "success";
   title: string;
   children: ReactNode;
 }) {
   const s = styles[type];
   return (
-    <div className={`mt-4 rounded-xl border p-4 ${s.wrapper}`}>
-      <div className={`text-sm font-semibold ${s.title}`}>{title}</div>
-      <div className="mt-2 text-sm leading-6">{children}</div>
+    <div className={`mt-6 mb-6 rounded-lg ${s.border} ${s.wrapper} p-4 backdrop-blur-sm shadow-sm`}>
+      <div className={`flex items-start gap-3`}>
+        <div className="text-lg flex-shrink-0 mt-0.5">{s.icon}</div>
+        <div className="flex-1 min-w-0">
+          <div className={`text-sm ${s.title}`}>{title}</div>
+          <div className="mt-2 text-sm leading-6 opacity-90">{children}</div>
+        </div>
+      </div>
     </div>
   );
 }

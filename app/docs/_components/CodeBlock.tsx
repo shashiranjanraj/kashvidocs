@@ -98,37 +98,37 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
   return (
     <div
       className={[
-        "mt-4 overflow-hidden rounded-xl border text-sm",
-        isTerminal ? "terminal-codeblock border-zinc-800 bg-black text-white" : "border-zinc-200 bg-zinc-50 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-100",
+        "mt-6 mb-8 overflow-hidden rounded-lg border text-sm shadow-lg",
+        isTerminal ? "terminal-codeblock border-zinc-700 bg-zinc-950 text-white" : "border-zinc-200 dark:border-zinc-700 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900/50 dark:to-zinc-800/30 text-zinc-900 dark:text-zinc-100",
       ].join(" ")}
     >
       <div
         className={[
-          "flex items-center justify-between border-b px-3 py-2 text-xs",
+          "flex items-center justify-between border-b px-4 py-3 text-xs font-medium",
           isTerminal
-            ? "border-zinc-800 bg-zinc-900 text-zinc-300"
-            : "border-zinc-200 bg-zinc-100 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300",
+            ? "border-zinc-700 bg-zinc-900 text-zinc-300"
+            : "border-zinc-200 dark:border-zinc-700 bg-gradient-to-r from-zinc-100 to-zinc-50 dark:from-zinc-900/60 dark:to-zinc-800/40 text-zinc-600 dark:text-zinc-300",
         ].join(" ")}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {isTerminal ? (
             <>
-              <span className="inline-flex items-center gap-1">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500 shadow-sm" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500 shadow-sm" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-sm" />
               </span>
-              <span className="ml-2 hidden text-[11px] text-zinc-400 sm:inline">
+              <span className="hidden text-[11px] text-zinc-400 font-mono sm:inline">
                 {headerLabel}
               </span>
             </>
           ) : (
             <>
-              <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold uppercase tracking-wide text-[10px]">
                 {headerLabel}
               </span>
               {highlightLanguage ? (
-                <span className="hidden rounded-full bg-sky-500/10 px-2 py-0.5 text-[11px] font-medium text-sky-500 sm:inline">
+                <span className="hidden px-2.5 py-1 rounded-md bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-mono text-[11px] sm:inline">
                   {highlightLanguage}
                 </span>
               ) : null}
@@ -139,48 +139,32 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
           type="button"
           onClick={handleCopy}
           className={[
-            "inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium",
+            "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-medium transition-all hover:shadow-md",
             isTerminal
-              ? "text-zinc-300 hover:bg-zinc-800"
-              : "text-zinc-600 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800",
+              ? "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+              : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700/50 transition-colors",
           ].join(" ")}
         >
           <span aria-hidden="true">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="9"
-                y="9"
-                width="11"
-                height="11"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-              <rect
-                x="4"
-                y="4"
-                width="11"
-                height="11"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-            </svg>
+            {copied ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 16.17L4.83 12m0 0l-1.41 1.41L9 19 21 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                <rect x="4" y="4" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+            )}
           </span>
-          <span>{copied ? "Copied" : "Copy"}</span>
+          <span className="font-medium">{copied ? "Copied!" : "Copy"}</span>
         </button>
       </div>
       <pre
         className={[
-          "max-h-[480px] overflow-x-auto overflow-y-auto px-3 py-3 text-[13px] leading-6 font-mono",
+          "max-h-[500px] overflow-x-auto overflow-y-auto px-4 py-4 text-[13px] leading-6 font-mono",
           isTerminal
-            ? "bg-transparent text-white"
+            ? "bg-zinc-950 text-white"
             : "bg-transparent text-zinc-900 dark:text-zinc-100",
         ].join(" ")}
       >
