@@ -152,6 +152,20 @@ body {
     @apply font-mono text-zinc-700 dark:text-zinc-200;
   }
 
+  /* Terminal code block styling - pure macOS terminal look */
+  .terminal-codeblock code,
+  .terminal-codeblock code span {
+    @apply !text-white !bg-transparent !border-none !shadow-none !px-0 !py-0;
+  }
+
+  .terminal-codeblock pre {
+    @apply !rounded-none !border-none !bg-black !shadow-none !px-0 !py-0 !mt-0 !mb-0;
+  }
+
+  .terminal-codeblock {
+    @apply !rounded-lg !shadow-none !border-none;
+  }
+
   .docs-content table {
     @apply mt-8 mb-8 w-full border-collapse rounded-xl overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-700;
   }

@@ -98,27 +98,27 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
   return (
     <div
       className={[
-        "mt-6 mb-8 overflow-hidden rounded-lg border text-sm shadow-lg",
-        isTerminal ? "terminal-codeblock border-zinc-700 bg-zinc-950 text-white" : "border-zinc-200 dark:border-zinc-700 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900/50 dark:to-zinc-800/30 text-zinc-900 dark:text-zinc-100",
+        "mt-6 mb-8 overflow-hidden text-sm",
+        isTerminal ? "terminal-codeblock bg-black" : "rounded-lg border border-zinc-200 dark:border-zinc-700 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900/50 dark:to-zinc-800/30 text-zinc-900 dark:text-zinc-100 shadow-lg",
       ].join(" ")}
     >
       <div
         className={[
-          "flex items-center justify-between border-b px-4 py-3 text-xs font-medium",
+          "flex items-center justify-between px-4 py-3 text-xs font-medium",
           isTerminal
-            ? "border-zinc-700 bg-zinc-900 text-zinc-300"
-            : "border-zinc-200 dark:border-zinc-700 bg-gradient-to-r from-zinc-100 to-zinc-50 dark:from-zinc-900/60 dark:to-zinc-800/40 text-zinc-600 dark:text-zinc-300",
+            ? "bg-black text-zinc-500"
+            : "border-b border-zinc-200 dark:border-zinc-700 bg-gradient-to-r from-zinc-100 to-zinc-50 dark:from-zinc-900/60 dark:to-zinc-800/40 text-zinc-600 dark:text-zinc-300",
         ].join(" ")}
       >
         <div className="flex items-center gap-3">
           {isTerminal ? (
             <>
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-500 shadow-sm" />
-                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500 shadow-sm" />
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-sm" />
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
               </span>
-              <span className="hidden text-[11px] text-zinc-400 font-mono sm:inline">
+              <span className="hidden text-[11px] text-zinc-500 font-mono sm:inline">
                 {headerLabel}
               </span>
             </>
@@ -141,7 +141,7 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
           className={[
             "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-medium transition-all hover:shadow-md",
             isTerminal
-              ? "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+              ? "text-zinc-500 hover:text-white hover:bg-zinc-800/50"
               : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700/50 transition-colors",
           ].join(" ")}
         >
@@ -162,10 +162,10 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
       </div>
       <pre
         className={[
-          "max-h-[500px] overflow-x-auto overflow-y-auto px-4 py-4 text-[13px] leading-6 font-mono",
+          "max-h-[500px] overflow-x-auto overflow-y-auto py-4 text-[13px] leading-6 font-mono",
           isTerminal
-            ? "bg-zinc-950 text-white"
-            : "bg-transparent text-zinc-900 dark:text-zinc-100",
+            ? "bg-black text-white pl-8 pr-4"
+            : "px-4 bg-transparent text-zinc-900 dark:text-zinc-100",
         ].join(" ")}
       >
         <code
