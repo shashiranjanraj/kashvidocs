@@ -167,6 +167,7 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
             ? "bg-black text-white pl-8 pr-4"
             : "px-4 bg-transparent text-zinc-900 dark:text-zinc-100",
         ].join(" ")}
+        style={{ marginLeft: "20px" }}
       >
         <code
           ref={codeRef}

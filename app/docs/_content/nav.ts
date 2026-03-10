@@ -32,12 +32,6 @@ export const docsNav: DocGroup[] = [
         description: "Build a validated REST user API quickly.",
         keywords: ["crud", "user", "validation", "routes"],
       },
-      {
-        title: "CRUD Walkthrough",
-        href: "/docs/crud-walkthrough",
-        description: "Full create/read/update/delete flow.",
-        keywords: ["make:crud", "migrate", "routes"],
-      },
     ],
   },
   {

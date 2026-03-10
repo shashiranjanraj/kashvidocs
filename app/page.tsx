@@ -14,7 +14,7 @@ export default function Home() {
               Kashvi
             </span>
           </Link>
-          
+
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">Features</a>
             <a href="#docs" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">Docs</a>
@@ -35,7 +35,7 @@ export default function Home() {
         {/* Animated gradient background */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
         <div className="mx-auto max-w-5xl text-center">
@@ -52,7 +52,7 @@ export default function Home() {
 
           {/* Subheading */}
           <p className="text-lg sm:text-xl text-zinc-600 dark:text-zinc-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Kashvi is a modern, feature-rich framework for building production-grade Go APIs. 
+            Kashvi is a modern, feature-rich framework for building production-grade Go APIs.
             Ships with CLI tools, ORM, validation, authentication, and more—everything you need to ship fast.
           </p>
 
@@ -253,17 +253,17 @@ export default function Home() {
             <div>
               <h4 className="font-semibold text-zinc-900 dark:text-white mb-4">Community</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="https://github.com" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">GitHub</a></li>
-                <li><a href="https://twitter.com" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Twitter</a></li>
-                <li><a href="https://discord.com" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Discord</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">GitHub</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Twitter</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Discord</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-900 dark:text-white mb-4">Legal</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">License</a></li>
-                <li><a href="#" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Privacy</a></li>
-                <li><a href="#" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Terms</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi/blob/main/LICENSE" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">License</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Privacy</a></li>
+                <li><a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Terms</a></li>
               </ul>
             </div>
           </div>
@@ -271,9 +271,9 @@ export default function Home() {
           <div className="border-t border-zinc-200 dark:border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-sm text-zinc-600 dark:text-zinc-400">
             <p>&copy; 2024 Kashvi Framework. All rights reserved.</p>
             <div className="flex gap-6 mt-4 sm:mt-0">
-              <a href="https://github.com" className="hover:text-zinc-900 dark:hover:text-white transition">GitHub</a>
-              <a href="https://twitter.com" className="hover:text-zinc-900 dark:hover:text-white transition">Twitter</a>
-              <a href="https://discord.com" className="hover:text-zinc-900 dark:hover:text-white transition">Discord</a>
+              <a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-white transition">GitHub</a>
+              <a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-white transition">Twitter</a>
+              <a href="https://github.com/shashiranjanraj/kashvi" target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-white transition">Discord</a>
             </div>
           </div>
         </div>
