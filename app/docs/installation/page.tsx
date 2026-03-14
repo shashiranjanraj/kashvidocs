@@ -10,111 +10,137 @@ export const metadata: Metadata = {
 export default function InstallationPage() {
   return (
     <article data-doc="true" className="docs-content">
-      <h1 id="installation-quick-start">Installation &amp; Quick Start</h1>
+      <h1 id="installation">Installation</h1>
+
+      <h2 id="install-go">1. Install Go</h2>
+      <p>Ensure you have Go 1.22 or later installed.</p>
+
+      <h2 id="install-cli">2. Install Kashvi CLI</h2>
+      <CodeBlock language="bash">
+        {`go install github.com/shashiranjanraj/kashvi/cmd/kashvi@latest`}
+      </CodeBlock>
+
+      <h2 id="create-project">3. Create a New Project</h2>
+      <CodeBlock language="bash">
+        {`kashvi new myproject
+cd myproject`}
+      </CodeBlock>
+
+      <h2 id="configure-environment">4. Configure Environment</h2>
+      <p>Copy the example environment file:</p>
+      <CodeBlock language="bash">{`cp .env.example .env`}</CodeBlock>
+      <p>Edit <code>.env</code> with your database and other settings (see <strong>Logging</strong> for <code>LOG_LEVEL</code> and <code>DB_LOG_MODE</code>):</p>
+      <CodeBlock title=".env" language="bash">
+        {`DB_DRIVER=sqlite
+DATABASE_DSN=kashvi.db
+JWT_SECRET=your-secret-key
+APP_PORT=8080
+APP_ENV=local
+REDIS_ADDR=localhost:6379
+LOG_LEVEL=info
+DB_LOG_MODE=silent`}
+      </CodeBlock>
+
+      <h2 id="logging">Logging (app and database)</h2>
       <p>
-        This guide sets up a new Kashvi project from zero to a running server.
+        A common need is to see <strong>what the app is doing</strong> (info logs) and <strong>what SQL is running</strong> (database logs). Kashvi uses structured logging and supports both.
       </p>
 
-      <h2 id="requirements">Requirements</h2>
+      <h3 id="logging-env">Environment</h3>
+      <p>In <code>.env</code>:</p>
+      <CodeBlock title=".env" language="bash">
+        {`# App log level: debug | info | warn | error (default: info)
+LOG_LEVEL=debug
+
+# GORM/SQL log level: silent | error | warn | info (default: silent)
+# Use "info" in development to log every query; "silent" in production.
+DB_LOG_MODE=info`}
+      </CodeBlock>
       <ul>
-        <li>
-          Go <code>1.25+</code> (matches this framework&apos;s <code>go.mod</code>
-          )
-        </li>
-        <li>Optional: Redis (session, queue, cache features)</li>
-        <li>
-          Optional: Postgres/MySQL/SQL Server (SQLite works by default)
-        </li>
+        <li><strong>LOG_LEVEL</strong> — Controls the application logger (startup, requests, errors). Use <code>debug</code> in development to see route registration and detailed messages; <code>info</code> or <code>warn</code> in production.</li>
+        <li><strong>DB_LOG_MODE</strong> — Controls GORM&apos;s SQL logging. Use <code>info</code> while developing to see queries and bindings; set to <code>silent</code> or <code>error</code> in production to reduce noise.</li>
       </ul>
 
-      <h2 id="step-1-install-cli">Step 1: Install the CLI</h2>
-      <p>Install the global <code>kashvi</code> command once:</p>
-      <CodeBlock>
-        {`go install github.com/shashiranjanraj/kashvi/cmd/kashvi@latest
-kashvi --help`}
-      </CodeBlock>
-      <p>If you are developing the framework repository itself, you can also run:</p>
-      <CodeBlock>{`make install`}</CodeBlock>
+      <h3 id="logging-code">In your code</h3>
+      <p>Use the global logger for app-level messages:</p>
+      <CodeBlock title="Logger usage" language="go">
+        {`import "github.com/shashiranjanraj/kashvi/pkg/logger"
 
-      <h2 id="step-2-create-project">Step 2: Create a project</h2>
-      <CodeBlock>
-        {`mkdir my-app
-cd my-app
-go mod init my-app
-go get github.com/shashiranjanraj/kashvi`}
+logger.Info("user_created", "user_id", user.ID, "email", user.Email)
+logger.Debug("cache_miss", "key", cacheKey)
+logger.Warn("rate_limit_approaching", "ip", ip, "count", n)
+logger.Error("payment_failed", "error", err, "order_id", orderID)`}
       </CodeBlock>
+      <p>Arguments are key-value pairs (alternating); they appear as structured fields in the log output.</p>
+
+      <h3 id="logging-request-scoped">Request-scoped logs (with request_id)</h3>
+      <p>The framework injects a <strong>request_id</strong> per request. Use it so you can trace one request across logs:</p>
+      <CodeBlock language="go">
+        {`// In a handler that has *http.Request (e.g. after ctx.Wrap, use c.R.Context())
+log := logger.WithCtx(c.R.Context())
+log.Info("order_created", "order_id", order.ID, "user_id", userID)`}
+      </CodeBlock>
+      <p>If the request passed through <code>reqid.Middleware()</code> and <code>middleware.Logger()</code>, <code>WithCtx</code> returns a logger that already includes <code>request_id</code>. The same ID is logged for that request in the HTTP access line (method, path, status, duration).</p>
+
+      <h3 id="logging-summary">Summary</h3>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-zinc-200 dark:border-zinc-700 rounded-lg">
+          <thead>
+            <tr className="bg-zinc-100 dark:bg-zinc-800">
+              <th className="text-left px-4 py-2 font-semibold">Goal</th>
+              <th className="text-left px-4 py-2 font-semibold">What to set / use</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">See app info and debug messages</td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>LOG_LEVEL=debug</code> (or <code>info</code>)</td></tr>
+            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">See SQL queries in development</td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>DB_LOG_MODE=info</code></td></tr>
+            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Trace one HTTP request in logs</td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>logger.WithCtx(r.Context())</code> in handlers</td></tr>
+            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Log from anywhere</td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>logger.Info/Debug/Warn/Error(&quot;msg&quot;, &quot;key&quot;, value)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="quick-start">Quick Start</h2>
+
+      <h3 id="basic-application">Basic Application</h3>
       <p>Create <code>main.go</code>:</p>
-      <CodeBlock title="main.go">
+      <CodeBlock title="main.go" language="go">
         {`package main
 
 import (
-	"github.com/shashiranjanraj/kashvi/pkg/app"
-	appctx "github.com/shashiranjanraj/kashvi/pkg/ctx"
-	"github.com/shashiranjanraj/kashvi/pkg/router"
+    "net/http"
+    "github.com/shashiranjanraj/kashvi/pkg/app"
+    "github.com/shashiranjanraj/kashvi/pkg/router"
 )
 
 func main() {
-	app.New().
-		Routes(func(r *router.Router) {
-			r.Get("/health", "health", appctx.Wrap(func(c *appctx.Context) {
-				c.Success(map[string]any{"ok": true})
-			}))
-		}).
-		Run()
+    app.New().
+        Routes(func(r *router.Router) {
+            r.Get("/hello", "hello", func(w http.ResponseWriter, req *http.Request) {
+                w.Write([]byte("Hello from Kashvi!"))
+            })
+        }).
+        Run()
 }`}
       </CodeBlock>
-
-      <h2 id="step-3-env-config">Step 3: Add environment config</h2>
-      <p>Create <code>.env</code>:</p>
-      <CodeBlock title=".env">
-        {`APP_ENV=local
-APP_PORT=8080
-JWT_SECRET=replace-with-long-random-secret
-
-DB_DRIVER=sqlite
-DATABASE_DSN=kashvi.db
-
-REDIS_ADDR=localhost:6379
-REDIS_PASSWORD=`}
-      </CodeBlock>
-
-      <Callout type="note" title="Notes">
-        <ul className="mt-0">
-          <li>
-            <code>DB_DRIVER</code> supports: <code>sqlite</code>,{" "}
-            <code>postgres</code>, <code>mysql</code>, <code>sqlserver</code>.
-          </li>
-          <li>
-            Kashvi reads both <code>config/app.json</code> and <code>.env</code>{" "}
-            (then applies defaults). <code>.env</code> wins.
-          </li>
-        </ul>
-      </Callout>
-
-      <h2 id="step-4-run-app">Step 4: Run the app</h2>
-      <p>From the project directory:</p>
-      <CodeBlock>{`kashvi serve`}</CodeBlock>
-      <p>
-        The CLI delegates to your project entrypoint (<code>go run . serve</code>
-        ), so your own routes/migrations/seeders are used.
-      </p>
-      <p>Quick checks:</p>
-      <CodeBlock>
-        {`curl http://localhost:8080/health
-kashvi route:list`}
-      </CodeBlock>
-
-      <h2 id="step-5-first-resource">Step 5: Add your first resource</h2>
-      <CodeBlock>{`kashvi make:crud Post`}</CodeBlock>
-      <p>
-        This generates model/controller/service/migration/seeder/test-scenario
-        files. Then:
-      </p>
-      <CodeBlock>
-        {`kashvi migrate
+      <p>Run the application:</p>
+      <CodeBlock language="bash">
+        {`go run main.go serve
+# or
 kashvi serve`}
       </CodeBlock>
+
+      <h3 id="database-setup">Database Setup</h3>
+      <p>For database support, add models and migrations:</p>
+      <CodeBlock language="go">
+        {`app.New().
+    Routes(func(r *router.Router) {
+        // routes here
+    }).
+    AutoMigrate(&User{}).
+    Run()`}
+      </CodeBlock>
+
     </article>
   );
 }
-

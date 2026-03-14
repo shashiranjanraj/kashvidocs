@@ -115,61 +115,71 @@ export default function Home() {
               {
                 icon: "⚡",
                 title: "Lightning Fast",
-                description: "Built on Go's performance to handle millions of requests per second."
+                description: "Built on Go's performance to handle millions of requests per second.",
+                href: "/docs",
               },
               {
                 icon: "🔐",
                 title: "Secure by Default",
-                description: "Built-in authentication, authorization, and security best practices."
+                description: "Built-in authentication, authorization, and security best practices.",
+                href: "/docs/authentication",
               },
               {
                 icon: "📦",
                 title: "Complete ORM",
-                description: "Powerful database ORM with migrations, relationships, and transactions."
+                description: "Powerful database ORM with migrations, relationships, and transactions.",
+                href: "/docs/orm",
               },
               {
                 icon: "✅",
                 title: "Smart Validation",
-                description: "Declarative validation rules with detailed error messages."
+                description: "Declarative validation rules with detailed error messages.",
+                href: "/docs/validation",
               },
               {
                 icon: "🛠️",
                 title: "CLI Tools",
-                description: "Powerful command-line tools for scaffolding and code generation."
+                description: "Powerful command-line tools for scaffolding and code generation.",
+                href: "/docs/cli",
               },
               {
                 icon: "📡",
                 title: "Real-time Features",
-                description: "WebSocket support and real-time data synchronization built-in."
+                description: "WebSocket support and real-time data synchronization built-in.",
+                href: "/docs/realtime",
               },
               {
                 icon: "📚",
                 title: "Complete Docs",
-                description: "Comprehensive guides, API reference, and practical examples."
+                description: "Comprehensive guides, API reference, and practical examples.",
+                href: "/docs",
               },
               {
                 icon: "🧪",
                 title: "Testing Ready",
-                description: "Built-in testing utilities and fixtures for easy testing."
+                description: "Built-in testing utilities and fixtures for easy testing.",
+                href: "/docs/testkit",
               },
               {
                 icon: "🚀",
                 title: "Deploy Anywhere",
-                description: "Deploy as a single binary to any cloud platform or server."
-              }
+                description: "Deploy as a single binary to any cloud platform or server.",
+                href: "/docs/installation",
+              },
             ].map((feature, index) => (
-              <div
+              <Link
                 key={index}
-                className="docs-card group p-6 rounded-xl hover:border-indigo-400 dark:hover:border-indigo-500"
+                href={feature.href}
+                className="docs-card group p-6 rounded-xl hover:border-indigo-400 dark:hover:border-indigo-500 block transition-colors"
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                   {feature.title}
                 </h3>
                 <p className="text-zinc-600 dark:text-zinc-300">
                   {feature.description}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

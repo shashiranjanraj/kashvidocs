@@ -168,6 +168,7 @@ export function CodeBlock({ children, title, kind, language }: CodeBlockProps) {
             : "px-4 bg-transparent text-zinc-900 dark:text-zinc-100",
         ].join(" ")}
         style={{ marginLeft: "20px" }}
+        tabIndex={0}
       >
         <code
           ref={codeRef}

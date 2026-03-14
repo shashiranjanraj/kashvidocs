@@ -16,7 +16,7 @@ export function DocsSearch() {
 
   const results = useMemo(() => {
     if (!query) return [];
-    const out = docsSearchIndex
+    return docsSearchIndex
       .map((item) => {
         const hay = norm(
           [item.title, item.description, item.keywords.join(" ")].join(" "),
@@ -27,9 +27,12 @@ export function DocsSearch() {
       .filter((r) => r.score > 0)
       .slice(0, 10)
       .map((r) => r.item);
-    setSelectedIndex(0);
-    return out;
   }, [query]);
+
+  // Reset selected index when results change
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [results]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -91,11 +94,10 @@ export function DocsSearch() {
                 key={r.href}
                 href={r.href}
                 onClick={() => setQ("")}
-                className={`flex flex-col gap-1.5 px-4 py-3 text-sm transition-all border-l-2 ${
-                  i === selectedIndex
+                className={`flex flex-col gap-1.5 px-4 py-3 text-sm transition-all border-l-2 ${i === selectedIndex
                     ? "border-l-indigo-500 bg-indigo-50 dark:bg-indigo-950/30"
                     : "border-l-transparent hover:border-l-indigo-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                }`}
+                  }`}
               >
                 <div className="font-semibold text-zinc-900 dark:text-zinc-100">
                   {r.title}
@@ -114,7 +116,7 @@ export function DocsSearch() {
         </div>
       ) : q ? (
         <div className="absolute left-0 right-0 top-12 z-50 overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 shadow-2xl backdrop-blur-xl p-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          No results found for "{q}"
+          No results found for &quot;{q}&quot;
         </div>
       ) : null}
     </div>

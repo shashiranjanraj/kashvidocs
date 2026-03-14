@@ -27,10 +27,10 @@ export const docsNav: DocGroup[] = [
         keywords: ["install", "quick start", "env", "serve"],
       },
       {
-        title: "User CRUD API (5 Minutes)",
+        title: "Complete CRUD Walkthrough (Product)",
         href: "/docs/user-crud",
-        description: "Build a validated REST user API quickly.",
-        keywords: ["crud", "user", "validation", "routes"],
+        description: "Model → migration → repository → service → controller → validation → auth → seed → test.",
+        keywords: ["crud", "product", "validation", "repository", "routes"],
       },
     ],
   },
