@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -7,16 +8,19 @@ export default function Home() {
       <nav className="sticky top-0 z-50 glass-panel border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link href="/" className="group flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition-transform group-hover:scale-110">
-              K
-            </span>
-            <span className="font-extrabold tracking-tight text-lg text-zinc-900 dark:text-zinc-50">
-              Kashvi
-            </span>
+            <Image
+              src="/kashvi-logo.png"
+              alt="Kashvi Framework"
+              width={140}
+              height={48}
+              className="h-10 w-auto transition-transform group-hover:scale-105"
+              priority
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">Features</a>
+            <Link href="/profile" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">Profile</Link>
             <a href="#docs" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">Docs</a>
             <a href="https://github.com/shashiranjanraj/kashvi" target="_blank" className="text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">GitHub</a>
           </div>
@@ -242,12 +246,15 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <div>
-              <div className="flex items-center gap-2.5 mb-4">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-sm font-bold text-white">
-                  K
-                </span>
-                <span className="font-bold text-zinc-900 dark:text-white">Kashvi</span>
-              </div>
+              <Link href="/" className="inline-block mb-4">
+                <Image
+                  src="/kashvi-logo.png"
+                  alt="Kashvi Framework"
+                  width={120}
+                  height={42}
+                  className="h-9 w-auto"
+                />
+              </Link>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 Build production-grade Go APIs with confidence.
               </p>

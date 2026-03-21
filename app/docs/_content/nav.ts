@@ -21,6 +21,12 @@ export const docsNav: DocGroup[] = [
         keywords: ["kashvi", "docs", "overview"],
       },
       {
+        title: "Creator — Kashvi framework",
+        href: "/profile/kashvi",
+        description: "Meet the engineer behind Kashvi — framework story, links, and back to docs.",
+        keywords: ["creator", "author", "shashi", "about"],
+      },
+      {
         title: "Installation & Quick Start",
         href: "/docs/installation",
         description: "Install the CLI and run your first app.",

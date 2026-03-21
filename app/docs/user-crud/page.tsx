@@ -190,7 +190,7 @@ export default function UserCrudPage() {
 kashvi seed
 kashvi serve`}
       </CodeBlock>
-      <p>Set <strong>LOG_LEVEL</strong> and <strong>DB_LOG_MODE</strong> in <code>.env</code> (see <Link href="/docs/installation#logging" className="text-indigo-600 dark:text-indigo-400 hover:underline">Logging</Link>) to see app and SQL logs.</p>
+      <p>Set <strong>LOG_LEVEL</strong> and <strong>DB_LOG_MODE</strong> in <code>.env</code> (see <Link href="/docs/installation#logging" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Logging</Link>) to see app and SQL logs.</p>
 
       <h2 id="step-10-test">Step 10: Test (curl and test scenarios)</h2>
 
@@ -246,7 +246,7 @@ curl -X DELETE http://localhost:8080/api/products/1`}
         </table>
       </div>
       <p>
-        See also: <Link href="/docs/routing" className="text-indigo-600 dark:text-indigo-400 hover:underline">Routing</Link>, <Link href="/docs/validation" className="text-indigo-600 dark:text-indigo-400 hover:underline">Validation</Link>, <Link href="/docs/authentication" className="text-indigo-600 dark:text-indigo-400 hover:underline">Authentication</Link>, <Link href="/docs/orm" className="text-indigo-600 dark:text-indigo-400 hover:underline">ORM &amp; Database</Link>, <Link href="/docs/migrations" className="text-indigo-600 dark:text-indigo-400 hover:underline">Migrations &amp; Seeders</Link>.
+        See also: <Link href="/docs/routing" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Routing</Link>, <Link href="/docs/validation" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Validation</Link>, <Link href="/docs/authentication" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Authentication</Link>, <Link href="/docs/orm" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">ORM &amp; Database</Link>, <Link href="/docs/migrations" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Migrations &amp; Seeders</Link>.
       </p>
     </article>
   );

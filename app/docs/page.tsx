@@ -53,7 +53,7 @@ export default function DocsHomePage() {
         Controllers and services depend on <strong>repositories</strong> (e.g. <code>UserRepository</code>) instead of <code>orm.DB()</code>. Repositories expose methods like <code>FindByID</code>, <code>All</code>, <code>Create</code>, <code>Update</code>, <code>Delete</code> and keep all data access in one place.
       </p>
       <p>
-        <strong>Where to start:</strong> After <Link href="/docs/installation" className="text-indigo-600 dark:text-indigo-400 hover:underline">Installation</Link> and Configure Environment, read the Logging section for app/DB log settings, then follow the <Link href="/docs/user-crud" className="text-indigo-600 dark:text-indigo-400 hover:underline">Complete CRUD walkthrough</Link> to use model, migration, repository, service, controller, validation, auth, seeder, and tests together.
+        <strong>Where to start:</strong> After <Link href="/docs/installation" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Installation</Link> and Configure Environment, read the Logging section for app/DB log settings, then follow the <Link href="/docs/user-crud" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Complete CRUD walkthrough</Link> to use model, migration, repository, service, controller, validation, auth, seeder, and tests together.
       </p>
 
       <h2 id="start-here">Start here</h2>
