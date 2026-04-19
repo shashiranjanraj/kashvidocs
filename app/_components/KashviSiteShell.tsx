@@ -48,9 +48,12 @@ export function KashviSiteShell({ children, showToc = true }: Props) {
             />
             <Typography
               variant="body2"
-              fontWeight={700}
-              letterSpacing={-0.3}
-              sx={{ display: { xs: "none", sm: "block" }, color: "text.primary" }}
+              sx={{
+                fontWeight: 700,
+                letterSpacing: -0.3,
+                display: { xs: "none", sm: "block" },
+                color: "text.primary",
+              }}
             >
               Docs
             </Typography>

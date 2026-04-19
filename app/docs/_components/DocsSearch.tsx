@@ -164,7 +164,7 @@ export function DocsSearch() {
                   transition: "background 0.15s",
                 }}
               >
-                <Typography variant="body2" fontWeight={600} color="text.primary">
+                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>
                   {r.title}
                 </Typography>
                 {r.description && (

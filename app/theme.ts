@@ -120,10 +120,10 @@ const lightTheme = createTheme({
     MuiAlert: {
       styleOverrides: {
         root: { borderRadius: "8px", fontSize: "0.875rem", border: "1px solid transparent" },
-        standardInfo:    { borderColor: "#bae6fd", backgroundColor: "#f0f9ff" },
-        standardSuccess: { borderColor: "#bbf7d0", backgroundColor: "#f0fdf4" },
-        standardWarning: { borderColor: "#fde68a", backgroundColor: "#fffbeb" },
-        standardError:   { borderColor: "#fecaca", backgroundColor: "#fef2f2" },
+        colorInfo:    { borderColor: "#bae6fd", backgroundColor: "#f0f9ff" },
+        colorSuccess: { borderColor: "#bbf7d0", backgroundColor: "#f0fdf4" },
+        colorWarning: { borderColor: "#fde68a", backgroundColor: "#fffbeb" },
+        colorError:   { borderColor: "#fecaca", backgroundColor: "#fef2f2" },
         message: { lineHeight: 1.65 },
         icon: { alignItems: "flex-start", paddingTop: "14px" },
       },
@@ -217,7 +217,7 @@ const darkTheme = createTheme({
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          ...lightTheme.components?.MuiListItemButton?.styleOverrides?.root,
+          ...((lightTheme.components?.MuiListItemButton?.styleOverrides?.root as object) ?? {}),
           color: "#94a3b8",
           "&:hover": { backgroundColor: "rgba(99,102,241,0.08)", color: "#f1f5f9" },
           "&.Mui-selected": {
@@ -232,10 +232,10 @@ const darkTheme = createTheme({
     MuiAlert: {
       styleOverrides: {
         root: { borderRadius: "8px", fontSize: "0.875rem", border: "1px solid transparent" },
-        standardInfo:    { borderColor: "#075985", backgroundColor: "#0c1e2e" },
-        standardSuccess: { borderColor: "#065f46", backgroundColor: "#0a1f18" },
-        standardWarning: { borderColor: "#92400e", backgroundColor: "#1f1500" },
-        standardError:   { borderColor: "#991b1b", backgroundColor: "#1f0606" },
+        colorInfo:    { borderColor: "#075985", backgroundColor: "#0c1e2e" },
+        colorSuccess: { borderColor: "#065f46", backgroundColor: "#0a1f18" },
+        colorWarning: { borderColor: "#92400e", backgroundColor: "#1f1500" },
+        colorError:   { borderColor: "#991b1b", backgroundColor: "#1f0606" },
         message: { lineHeight: 1.65, color: "#e2e8f0" },
       },
     },

@@ -72,8 +72,10 @@ export function DocsSidebar() {
                     primary={item.title}
                     slotProps={{
                       primary: {
-                        fontSize: "0.875rem",
-                        fontWeight: active ? 600 : 400,
+                        sx: {
+                          fontSize: "0.875rem",
+                          fontWeight: active ? 600 : 400,
+                        },
                         noWrap: true,
                       },
                     }}
@@ -107,7 +109,7 @@ export function DocsSidebar() {
               SR
             </Avatar>
             <Box>
-              <Typography variant="body2" fontWeight={600} color="text.primary" noWrap>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }} noWrap>
                 Built by Shashi
               </Typography>
               <Typography variant="caption" color="text.secondary" noWrap>
