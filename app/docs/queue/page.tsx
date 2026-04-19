@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Callout } from "../_components/Callout";
 import { CodeBlock } from "../_components/CodeBlock";
 
 export const metadata: Metadata = {
@@ -83,11 +84,16 @@ queue.SetDriver(queue.NewRedisDriver(cache.RDB))`}
       </ul>
 
       <h2 id="starting-workers">Starting Workers</h2>
+      <Callout type="note" title="CLI command availability">
+        The <code>kashvi queue:work</code> subcommand is registered on the CLI binary when it is built and run from the{" "}
+        <strong>Kashvi framework repository</strong>. In a normal application project, call{" "}
+        <code>queue.StartWorkers(ctx, n)</code> from your code (or a dedicated <code>main</code> package).
+      </Callout>
       <CodeBlock>
-        {`# From CLI (production)
+        {`# Framework dev / clone only:
 kashvi queue:work --workers=5
 
-# Or programmatically:
+# Application code (any project):
 queue.StartWorkers(ctx, 5)`}
       </CodeBlock>
 

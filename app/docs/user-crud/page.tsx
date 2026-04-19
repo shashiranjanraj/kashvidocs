@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock } from "../_components/CodeBlock";
+import { Callout } from "../_components/Callout";
+import { DocsPageHeader } from "../_components/DocsPageHeader";
+import { FileTree } from "../_components/FileTree";
 
-const repoFindBySKUExample = `// Optional: add custom queries
-func (r *ProductRepository) FindBySKU(sku string) (*models.Product, error) {
-    var p models.Product
-    err := r.Query().Where("sku = ?", sku).First(&p)
-    if err != nil {
-        return nil, err
-    }
-    return &p, nil
-}
-`;
+/* ─── inline code snippets ───────────────────────────── */
 
 const productModelExample = `package models
 
@@ -23,6 +17,17 @@ type Product struct {
     Description string  \`json:"description"\`
     Price       float64 \`json:"price"        gorm:"not null"              validate:"required,gte=0"\`
     SKU         string  \`json:"sku"         gorm:"uniqueIndex;not null"   validate:"required"\`
+}
+`;
+
+const repoFindBySKUExample = `// Optional: add custom queries
+func (r *ProductRepository) FindBySKU(sku string) (*models.Product, error) {
+    var p models.Product
+    err := r.Query().Where("sku = ?", sku).First(&p)
+    if err != nil {
+        return nil, err
+    }
+    return &p, nil
 }
 `;
 
@@ -38,17 +43,20 @@ const productServiceExample = `func (s *ProductService) CreateProduct(input *mod
 const controllerStoreExample = `import "github.com/shashiranjanraj/kashvi/pkg/logger"
 
 func (c *ProductController) Store(ctx *appctx.Context) {
-    var input models.Product
+    var input dto.CreateProductRequest
     if !ctx.BindJSON(&input) {
-        return
+        return // BindJSON already sent 422 + validation errors
     }
-    if err := c.repo.Create(&input); err != nil {
+    model := &models.Product{
+        Name: input.Name, Description: input.Description, Price: input.Price, SKU: input.SKU,
+    }
+    if err := c.repo.Create(model); err != nil {
         ctx.Error(http.StatusBadRequest, "Failed to create product")
         return
     }
     log := logger.WithCtx(ctx.R.Context())
-    log.Info("product_created", "id", input.ID, "sku", input.SKU)
-    ctx.Created(input)
+    log.Info("product_created", "id", model.ID, "sku", model.SKU)
+    ctx.Created(model)
 }
 `;
 
@@ -79,132 +87,517 @@ const seederExample = `func init() {
 `;
 
 const testExample = `func TestProductAPI(t *testing.T) {
-    handler := app.BuildHandler(/* your app with routes */)
+    handler := app.New().
+        Routes(RegisterRoutes).
+        Handler()
     testkit.RunDir(t, handler, "testdata")
 }
 `;
 
+/* ─── generated file tree ────────────────────────────── */
+const generatedFiles = [
+  {
+    name: "app/",
+    isDir: true,
+    children: [
+      {
+        name: "models/",
+        isDir: true,
+        children: [
+          {
+            name: "product.go",
+            highlight: true,
+            description: "Product struct with gorm/json/validate tags",
+          },
+        ],
+      },
+      {
+        name: "dto/",
+        isDir: true,
+        children: [
+          {
+            name: "product_dto.go",
+            highlight: true,
+            description: "CreateProductRequest, UpdateProductRequest",
+          },
+        ],
+      },
+      {
+        name: "repositories/",
+        isDir: true,
+        children: [
+          {
+            name: "product.go",
+            highlight: true,
+            description: "FindByID, All, Create, Update, Delete, Query",
+          },
+        ],
+      },
+      {
+        name: "services/",
+        isDir: true,
+        children: [
+          {
+            name: "product_service.go",
+            highlight: true,
+            description: "Business logic (optional)",
+          },
+        ],
+      },
+      {
+        name: "controllers/",
+        isDir: true,
+        children: [
+          {
+            name: "product_controller.go",
+            highlight: true,
+            description: "HTTP handlers using repository + DTOs",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "database/",
+    isDir: true,
+    children: [
+      {
+        name: "migrations/",
+        isDir: true,
+        children: [
+          {
+            name: "..._create_products_table.go",
+            highlight: true,
+            description: "AutoMigrate up, DropTable down",
+          },
+        ],
+      },
+      {
+        name: "seeders/",
+        isDir: true,
+        children: [
+          {
+            name: "product_seeder.go",
+            highlight: true,
+            description: "Sample data via app.RegisterSeeder",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "testdata/",
+    isDir: true,
+    children: [
+      {
+        name: "product_scenarios.json",
+        highlight: true,
+        description: "JSON test scenarios: list, create, get, update, delete",
+      },
+    ],
+  },
+];
+
 export const metadata: Metadata = {
   title: "Complete CRUD Walkthrough (Product API)",
-  description: "Build a full Product API with model, migration, repository, service, controller, validation, auth, seeder, and tests.",
+  description:
+    "Build a full Product API with model, migration, repository, service, controller, validation, auth, seeder, and tests.",
 };
 
 export default function UserCrudPage() {
   return (
     <article data-doc="true" className="docs-content">
-      <h1 id="complete-crud-walkthrough">Complete CRUD walkthrough (model → migration → repository → service → controller → validation → auth → seed → test)</h1>
-      <p>
-        This section walks through building a full <strong>Product</strong> API using every layer: <strong>model</strong>, <strong>migration</strong>, <strong>repository</strong>, <strong>service</strong>, <strong>controller</strong>, <strong>validation</strong>, <strong>auth</strong> (optional), <strong>seeder</strong>, and <strong>test scenarios</strong>. The controller uses the <strong>repository</strong> (no direct <code>orm</code> calls), and validation runs via <strong>BindJSON</strong> and <strong>validate</strong> tags.
-      </p>
-      <p>
-        Follow along step-by-step to generate files, wire routes, migrate/seed, and test the API.
-      </p>
+      <DocsPageHeader
+        id="complete-crud-walkthrough"
+        eyebrow="Guide"
+        title="Complete CRUD Walkthrough"
+        description="Build a Product API end-to-end: model → DTO → migration → repository → service → controller → auth → seed → test. Follow along step by step or jump to the section you need."
+      />
 
-      <h2 id="step-1-generate">Step 1: Generate the resource</h2>
-      <p>From your project root (where <code>go.mod</code> lives):</p>
-      <CodeBlock language="bash">{`kashvi make:resource Product`}</CodeBlock>
-      <p>This creates:</p>
+      {/* ── What we're building ───────────────────── */}
+      <h2 id="what-we-are-building">What we&apos;re building</h2>
+      <p>
+        By the end of this guide you will have a working REST API for managing
+        products, with these endpoints:
+      </p>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm">
           <thead>
             <tr className="bg-zinc-100 dark:bg-zinc-800">
-              <th className="text-left px-4 py-2 font-semibold">File</th>
-              <th className="text-left px-4 py-2 font-semibold">Purpose</th>
+              <th className="text-left px-4 py-2 font-semibold">Method</th>
+              <th className="text-left px-4 py-2 font-semibold">Endpoint</th>
+              <th className="text-left px-4 py-2 font-semibold">Auth?</th>
+              <th className="text-left px-4 py-2 font-semibold">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>app/models/product.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Product model (GORM struct)</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>app/repositories/product.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Data layer; controller calls this instead of orm</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>app/controllers/product_controller.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">CRUD controller (uses repository)</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>app/services/product_service.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Business logic (holds repository)</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>database/migrations/..._create_products_table.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Migration with AutoMigrate &amp; DropTable</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>database/seeders/product_seeder.go</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Seeder using <code>app.RegisterSeeder</code></td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>testdata/product_scenarios.json</code></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Test scenarios (list, create, get, update, delete)</td></tr>
+            <tr>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <span className="badge badge-blue">GET</span>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <code>/api/products</code>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                No
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                List all products
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <span className="badge badge-blue">GET</span>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <code>/api/products/{"{id}"}</code>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                No
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                Get one product
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <span className="badge badge-green">POST</span>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <code>/api/products</code>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                JWT
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                Create a product
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <span className="badge badge-amber">PUT</span>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <code>/api/products/{"{id}"}</code>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                JWT
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                Update a product
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <span className="badge badge-purple">DELETE</span>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                <code>/api/products/{"{id}"}</code>
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                JWT
+              </td>
+              <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                Delete a product
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <p>The CLI will print the exact route registration snippet to paste into your routes file.</p>
 
-      <h2 id="step-2-model">Step 2: Model and validation tags</h2>
-      <p>Edit <code>app/models/product.go</code>: add fields and <strong>gorm</strong> / <strong>json</strong> tags. Use <strong>validate</strong> tags so that <code>ctx.BindJSON(&amp;input)</code> can validate the body:</p>
+      {/* ── How the layers fit together ───────────── */}
+      <h2 id="architecture">How the layers fit together</h2>
+      <p>
+        Kashvi follows MVC with an extra <strong>Repository</strong> layer to
+        keep all database calls in one place. Here is the flow for a{" "}
+        <code>POST /api/products</code> request:
+      </p>
+      <pre className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-5 text-sm font-mono overflow-x-auto leading-7">
+{`HTTP Request  →  Router  →  Middleware (JWT, Logger)
+                               ↓
+                         Controller
+                           • ctx.BindJSON(&dto)   ← parse + validate body
+                           • repo.Create(&model)  ← call repository
+                           • ctx.Created(model)   ← send 201 JSON response
+                               ↓
+                         Repository
+                           • orm.DB().Create(...)  ← the ONLY place that
+                                                      touches the database
+                               ↓
+                           Database (SQLite / MySQL / PostgreSQL)`}
+      </pre>
+      <Callout type="note" title="Why not call the database directly in the controller?">
+        Keeping DB calls in the <strong>Repository</strong> means your
+        controller is easier to test (you can mock the repository), and
+        switching databases later only requires changes in one place.
+      </Callout>
+
+      {/* ── Step 1: Generate ─────────────────────── */}
+      <h2 id="step-1-generate">Step 1 — Generate the resource</h2>
+      <p>
+        From your project root (where <code>go.mod</code> lives), run one
+        command to scaffold every file you need:
+      </p>
+      <CodeBlock language="bash">{`kashvi make:resource Product`}</CodeBlock>
+
+      <p>
+        The CLI prints the exact route snippet to paste into your routes file,
+        and creates the following files:
+      </p>
+
+      <FileTree
+        items={generatedFiles}
+        caption="All highlighted files are generated automatically — you only need to edit them to add your fields and business logic."
+      />
+
+      <Callout type="tip" title="Need only some pieces?">
+        You can generate them individually:{" "}
+        <code>kashvi make:model Product</code>,{" "}
+        <code>kashvi make:controller Product</code>,{" "}
+        <code>kashvi make:dto Product</code>, etc.
+      </Callout>
+
+      {/* ── Step 2: Model ────────────────────────── */}
+      <h2 id="step-2-model">Step 2 — Define the model</h2>
+      <p>
+        Edit <code>app/models/product.go</code>. Add your fields with{" "}
+        <strong>gorm</strong>, <strong>json</strong>, and{" "}
+        <strong>validate</strong> tags. The <code>validate</code> tags are read
+        automatically by <code>ctx.BindJSON</code> — no extra code needed.
+      </p>
       <CodeBlock title="app/models/product.go" language="go">
         {productModelExample}
       </CodeBlock>
-      <p>Validation runs automatically when the controller calls <code>ctx.BindJSON(&amp;input)</code> with a struct that has <code>validate</code> tags. Supported rules include <code>required</code>, <code>email</code>, <code>min</code>, <code>max</code>, <code>gte</code>, <code>lte</code>, <code>in</code>, <code>url</code>, etc.</p>
+      <p>
+        Common validate rules: <code>required</code>, <code>email</code>,{" "}
+        <code>min</code>, <code>max</code>, <code>gte</code>, <code>lte</code>,{" "}
+        <code>in</code>, <code>url</code>. A failed rule returns{" "}
+        <code>422 Unprocessable Entity</code> with field-level errors — your
+        controller does not need to handle it.
+      </p>
 
-      <h2 id="step-3-migration">Step 3: Migration</h2>
-      <p>The generated migration already:</p>
+      {/* ── Step 3: Migration ────────────────────── */}
+      <h2 id="step-3-migration">Step 3 — Run the migration</h2>
+      <p>
+        The generated migration file at{" "}
+        <code>database/migrations/..._create_products_table.go</code> already
+        contains:
+      </p>
       <ul>
-        <li><strong>Up:</strong> runs <code>db.AutoMigrate(&amp;models.Product{})</code> so the table matches your model.</li>
-        <li><strong>Down:</strong> runs <code>db.Migrator().DropTable("products")</code>.</li>
+        <li>
+          <strong>Up:</strong> <code>db.AutoMigrate(&amp;models.Product{})</code>{" "}
+          — creates or updates the <code>products</code> table to match your
+          model struct.
+        </li>
+        <li>
+          <strong>Down:</strong>{" "}
+          <code>db.Migrator().DropTable(&quot;products&quot;)</code> — removes
+          the table on rollback.
+        </li>
       </ul>
-      <p>Imports use your module path from <code>go.mod</code>. You only need to change the migration if you add custom SQL or indexes.</p>
+      <p>
+        Imports use your module path from <code>go.mod</code>. You only need
+        to edit the migration file if you want to add custom SQL indexes or
+        constraints beyond what GORM handles automatically.
+      </p>
+      <CodeBlock language="bash">{`kashvi migrate`}</CodeBlock>
 
-      <h2 id="step-4-repository">Step 4: Repository</h2>
-      <p>The generated <code>app/repositories/product.go</code> embeds <code>repository.Base[models.Product]</code> and exposes:</p>
-      <ul>
-        <li><code>FindByID(id uint)</code>, <code>All()</code>, <code>Create(m *Product)</code>, <code>Update(m *Product)</code>, <code>Delete(id uint)</code></li>
-        <li><code>Query()</code> for custom chains (e.g. filters, pagination)</li>
-      </ul>
-      <p>No change needed for basic CRUD. Add methods like <code>FindBySKU(sku string)</code> in this file if you need them; keep all data access here, not in the controller.</p>
-      <CodeBlock title="app/repositories/product.go (custom method example)" language="go">
+      {/* ── Step 4: Repository ───────────────────── */}
+      <h2 id="step-4-repository">Step 4 — Repository (data layer)</h2>
+      <p>
+        The generated <code>app/repositories/product.go</code> embeds{" "}
+        <code>repository.Base[models.Product]</code> and gives you these
+        methods for free:
+      </p>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm">
+          <thead>
+            <tr className="bg-zinc-100 dark:bg-zinc-800">
+              <th className="text-left px-4 py-2 font-semibold">Method</th>
+              <th className="text-left px-4 py-2 font-semibold">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["FindByID(id uint)", "Fetch one record by primary key"],
+              ["All()", "Fetch all records"],
+              ["Create(m *Product)", "Insert a new record"],
+              ["Update(m *Product)", "Save changes to an existing record"],
+              ["Delete(id uint)", "Soft-delete by primary key"],
+              [
+                "Query()",
+                "Raw GORM chain for custom filters, pagination, joins",
+              ],
+            ].map(([method, desc]) => (
+              <tr key={method}>
+                <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                  <code>{method}</code>
+                </td>
+                <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                  {desc}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        No changes needed for basic CRUD. To add a custom query, add a method
+        to this file:
+      </p>
+      <CodeBlock
+        title="app/repositories/product.go — custom method"
+        language="go"
+      >
         {repoFindBySKUExample}
       </CodeBlock>
+      <Callout type="caution" title="Keep ALL database calls in the repository">
+        Never call <code>orm.DB()</code> directly from a controller or
+        service. This ensures your controllers stay testable and your data
+        access stays in one predictable place.
+      </Callout>
 
-      <h2 id="step-5-service">Step 5: Service (optional)</h2>
-      <p>The generated service has a <strong>repository</strong> field. Use it for business logic (e.g. checks, multiple repo calls, events):</p>
+      {/* ── Step 5: Service ──────────────────────── */}
+      <h2 id="step-5-service">Step 5 — Service (optional)</h2>
+      <p>
+        The service layer is <strong>optional for simple CRUD</strong>. Use it
+        when you have business logic that spans multiple repositories, sends
+        emails, publishes queue jobs, etc. The generated service already holds
+        a repository reference:
+      </p>
       <CodeBlock title="app/services/product_service.go" language="go">
         {productServiceExample}
       </CodeBlock>
-      <p>For simple CRUD, the controller can call the repository directly; the service is optional.</p>
+      <p>
+        For simple CRUD, the controller can call the repository directly and
+        you can skip the service entirely.
+      </p>
 
-      <h2 id="step-6-controller">Step 6: Controller and validation</h2>
-      <p>The generated controller already uses the <strong>repository</strong> (no <code>orm</code> in the controller). It:</p>
+      {/* ── Step 6: DTOs ─────────────────────────── */}
+      <h2 id="step-6-dto">Step 6 — DTOs (request / response)</h2>
+      <p>
+        The generated <code>app/dto/product_dto.go</code> holds:
+      </p>
       <ul>
-        <li><strong>Store:</strong> binds JSON to <code>models.Product</code> with <code>ctx.BindJSON(&amp;input)</code>. Validation runs from the model&apos;s <code>validate</code> tags; on failure the framework returns 422.</li>
-        <li><strong>Update:</strong> loads by ID via repo, binds JSON into the same struct, then <code>repo.Update(item)</code>.</li>
-        <li><strong>Index / Show / Destroy:</strong> call <code>repo.All()</code>, <code>repo.FindByID</code>, <code>repo.Delete</code>.</li>
+        <li>
+          <strong>CreateProductRequest</strong> — all required fields with
+          validate tags
+        </li>
+        <li>
+          <strong>UpdateProductRequest</strong> — same fields as pointers (so
+          partial updates work; a missing field means &quot;don&apos;t change
+          it&quot;)
+        </li>
+        <li>
+          <strong>ProductResponse</strong> (optional) — a safe shape to return
+          to API clients, hiding internal fields
+        </li>
       </ul>
-      <p>To add <strong>logging</strong> (e.g. for create):</p>
-      <CodeBlock title="Controller Store with logging" language="go">
+      <p>
+        Controllers bind the request body to these structs with{" "}
+        <code>ctx.BindJSON</code> so validation runs before the model is
+        touched. To generate DTOs without a full resource:{" "}
+        <code>kashvi make:dto Product</code>.
+      </p>
+
+      {/* ── Step 7: Controller ───────────────────── */}
+      <h2 id="step-7-controller">Step 7 — Controller and validation</h2>
+      <p>
+        The generated controller uses the <strong>repository</strong> and{" "}
+        <strong>DTOs</strong> — there is no <code>orm</code> import in
+        the controller file. Each handler follows the same pattern:
+      </p>
+      <ul>
+        <li>
+          <strong>Store:</strong> binds JSON to{" "}
+          <code>dto.CreateProductRequest</code>, then maps into{" "}
+          <code>models.Product</code> and calls <code>repo.Create</code>.
+        </li>
+        <li>
+          <strong>Update:</strong> loads by ID via repo, binds{" "}
+          <code>dto.UpdateProductRequest</code>, applies pointer fields, then{" "}
+          <code>repo.Update</code>.
+        </li>
+        <li>
+          <strong>Index / Show / Destroy:</strong> call <code>repo.All()</code>
+          , <code>repo.FindByID</code>, <code>repo.Delete</code>.
+        </li>
+      </ul>
+      <p>
+        To add <strong>logging</strong> (recommended for create/update/delete):
+      </p>
+      <CodeBlock title="app/controllers/product_controller.go — Store" language="go">
         {controllerStoreExample}
       </CodeBlock>
 
-      <h2 id="step-7-routes">Step 7: Routes and optional auth</h2>
-      <p>Register routes (and optionally the service) in <code>main.go</code> or <code>app/routes/api.go</code>:</p>
-      <CodeBlock title="Routes with optional auth" language="go">
+      {/* ── Step 8: Routes ───────────────────────── */}
+      <h2 id="step-8-routes">Step 8 — Routes and authentication</h2>
+      <p>
+        Register routes in <code>main.go</code> or{" "}
+        <code>app/routes/api.go</code>. The CLI printed the exact snippet when
+        you ran <code>kashvi make:resource</code> — paste it here:
+      </p>
+      <CodeBlock title="app/routes/api.go" language="go">
         {routesExample}
       </CodeBlock>
-      <p><strong>Auth:</strong> use <code>middleware.AuthMiddleware</code> on the router or group. The middleware validates the <code>Authorization: Bearer &lt;token&gt;</code> header and injects <code>user_id</code> and <code>role</code> into the request context. In handlers, use <code>middleware.UserIDFromCtx(r)</code> or <code>middleware.RoleFromCtx(r)</code> to read the current user.</p>
+      <Callout type="note" title="How JWT auth works">
+        <code>middleware.AuthMiddleware</code> validates the{" "}
+        <code>Authorization: Bearer &lt;token&gt;</code> header. If the token
+        is missing or invalid the request is rejected with{" "}
+        <code>401 Unauthorized</code> before reaching your controller. Inside
+        handlers you can read the current user with{" "}
+        <code>middleware.UserIDFromCtx(r)</code> or{" "}
+        <code>middleware.RoleFromCtx(r)</code>.
+      </Callout>
 
-      <h2 id="step-8-seeder">Step 8: Seeder</h2>
-      <p>The generated seeder uses <code>app.RegisterSeeder(&quot;products&quot;, func() {'{'} ... {'}'})</code>. Edit <code>database/seeders/product_seeder.go</code> and add sample data:</p>
+      {/* ── Step 9: Seeder ───────────────────────── */}
+      <h2 id="step-9-seeder">Step 9 — Seed sample data</h2>
+      <p>
+        Edit <code>database/seeders/product_seeder.go</code> and add some
+        sample rows:
+      </p>
       <CodeBlock title="database/seeders/product_seeder.go" language="go">
         {seederExample}
       </CodeBlock>
-      <p>Ensure your app&apos;s migrations (and optionally seeders) are registered (e.g. blank import <code>_ &quot;yourmodule/database/migrations&quot;</code> and <code>_ &quot;yourmodule/database/seeders&quot;</code> in <code>main.go</code>).</p>
-
-      <h2 id="step-9-run">Step 9: Run migrations, seed, and server</h2>
-      <CodeBlock language="bash">
-        {`kashvi migrate
-kashvi seed
-kashvi serve`}
+      <p>
+        Ensure migrations and seeders are registered in <code>main.go</code>{" "}
+        via blank imports:
+      </p>
+      <CodeBlock title="main.go — blank imports" language="go">
+        {`import (
+    _ "yourmodule/database/migrations"
+    _ "yourmodule/database/seeders"
+)`}
       </CodeBlock>
-      <p>Set <strong>LOG_LEVEL</strong> and <strong>DB_LOG_MODE</strong> in <code>.env</code> (see <Link href="/docs/installation#logging" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Logging</Link>) to see app and SQL logs.</p>
 
-      <h2 id="step-10-test">Step 10: Test (curl and test scenarios)</h2>
-
-      <h3 id="curl">Manual (curl)</h3>
+      {/* ── Step 10: Run ─────────────────────────── */}
+      <h2 id="step-10-run">Step 10 — Run migrations, seed, and serve</h2>
       <CodeBlock language="bash">
-        {`# List
+        {`kashvi migrate   # create / update the products table
+kashvi seed      # insert sample data
+kashvi serve     # start the server on APP_PORT (default 8080)`}
+      </CodeBlock>
+      <p>
+        Set <strong>LOG_LEVEL</strong> and <strong>DB_LOG_MODE</strong> in{" "}
+        <code>.env</code> (see{" "}
+        <Link href="/docs/installation#logging">Logging</Link>) to see app
+        logs and SQL queries during development.
+      </p>
+
+      {/* ── Step 11: Test ────────────────────────── */}
+      <h2 id="step-11-test">Step 11 — Test the API</h2>
+
+      <h3 id="curl">Quick check with curl</h3>
+      <CodeBlock language="bash">
+        {`# List all products
 curl http://localhost:8080/api/products
 
-# Create (if not using auth)
+# Create a product (no auth on this example)
 curl -X POST http://localhost:8080/api/products \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Laptop","description":"Gaming","price":999.99,"sku":"LAPTOP001"}'
 
-# Get one
+# Get one product
 curl http://localhost:8080/api/products/1
 
 # Update
@@ -216,37 +609,108 @@ curl -X PUT http://localhost:8080/api/products/1 \\
 curl -X DELETE http://localhost:8080/api/products/1`}
       </CodeBlock>
 
-      <h3 id="testkit">Automated (testkit)</h3>
-      <p>The generated <code>testdata/product_scenarios.json</code> defines scenarios (list, create, get, update, delete). Build your app&apos;s <code>http.Handler</code> (e.g. from <code>app</code> + routes) and run:</p>
-      <CodeBlock language="go">
-        {testExample}
-      </CodeBlock>
-      <p>Put request/response JSON fixtures in <code>testdata/</code> as referenced by the scenario files (e.g. <code>product_create_req.json</code>, <code>product_create_res.json</code>).</p>
+      <h3 id="testkit">Automated with TestKit</h3>
+      <p>
+        The generated <code>testdata/product_scenarios.json</code> defines
+        scenarios (list, create, get, update, delete). Build your app&apos;s
+        handler and run:
+      </p>
+      <CodeBlock language="go">{testExample}</CodeBlock>
+      <p>
+        Put request/response JSON fixtures in <code>testdata/</code> as
+        referenced by the scenario file (e.g.{" "}
+        <code>product_create_req.json</code>,{" "}
+        <code>product_create_res.json</code>). See the{" "}
+        <Link href="/docs/testkit">TestKit docs</Link> for the full scenario
+        format.
+      </p>
 
-      <h2 id="flow-summary">Flow summary</h2>
+      {/* ── Flow summary ─────────────────────────── */}
+      <h2 id="flow-summary">Layer quick reference</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm">
           <thead>
             <tr className="bg-zinc-100 dark:bg-zinc-800">
               <th className="text-left px-4 py-2 font-semibold">Layer</th>
-              <th className="text-left px-4 py-2 font-semibold">Role</th>
+              <th className="text-left px-4 py-2 font-semibold">File</th>
+              <th className="text-left px-4 py-2 font-semibold">
+                Responsibility
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Model</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Struct + gorm/json/validate tags</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Migration</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">AutoMigrate / DropTable for the model</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Repository</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">All DB access (FindByID, All, Create, Update, Delete, Query)</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Service</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Optional business logic using repository</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Controller</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">HTTP only: BindJSON (validation), call repo/service, logger.WithCtx, respond</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Validation</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">Via <code>validate</code> tags and <code>ctx.BindJSON</code> (422 on failure)</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Auth</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>middleware.AuthMiddleware</code> on routes; JWT in <code>Authorization</code> header</td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Seeder</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><code>app.RegisterSeeder(&quot;key&quot;, func() {'{'} ... {'}'})</code></td></tr>
-            <tr><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700"><strong>Test</strong></td><td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">testkit + JSON scenarios in <code>testdata/</code></td></tr>
+            {[
+              [
+                "Model",
+                "app/models/product.go",
+                "Struct + gorm/json/validate tags",
+              ],
+              [
+                "DTO",
+                "app/dto/product_dto.go",
+                "Request/response structs; validate tags; used with ctx.BindJSON",
+              ],
+              [
+                "Migration",
+                "database/migrations/…",
+                "AutoMigrate / DropTable for the model",
+              ],
+              [
+                "Repository",
+                "app/repositories/product.go",
+                "ALL DB access (FindByID, All, Create, Update, Delete, Query)",
+              ],
+              [
+                "Service",
+                "app/services/product_service.go",
+                "Optional business logic using repository",
+              ],
+              [
+                "Controller",
+                "app/controllers/product_controller.go",
+                "HTTP only: BindJSON (validation), call repo/service, log, respond",
+              ],
+              [
+                "Routes",
+                "app/routes/api.go",
+                "Wire controller methods to HTTP methods + paths",
+              ],
+              [
+                "Seeder",
+                "database/seeders/product_seeder.go",
+                'app.RegisterSeeder("key", func() { ... })',
+              ],
+              [
+                "Tests",
+                "testdata/product_scenarios.json",
+                "testkit + JSON scenarios",
+              ],
+            ].map(([layer, file, role]) => (
+              <tr key={layer}>
+                <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700 font-semibold text-zinc-900 dark:text-zinc-100">
+                  {layer}
+                </td>
+                <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                  <code>{file}</code>
+                </td>
+                <td className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700">
+                  {role}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
+
+      {/* ── What's next ──────────────────────────── */}
+      <h2 id="whats-next">What&apos;s next?</h2>
       <p>
-        See also: <Link href="/docs/routing" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Routing</Link>, <Link href="/docs/validation" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Validation</Link>, <Link href="/docs/authentication" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Authentication</Link>, <Link href="/docs/orm" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">ORM &amp; Database</Link>, <Link href="/docs/migrations" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Migrations &amp; Seeders</Link>.
+        See also:{" "}
+        <Link href="/docs/routing">Routing</Link>,{" "}
+        <Link href="/docs/validation">Validation</Link>,{" "}
+        <Link href="/docs/authentication">Authentication</Link>,{" "}
+        <Link href="/docs/orm">ORM &amp; Database</Link>,{" "}
+        <Link href="/docs/migrations">Migrations &amp; Seeders</Link>.
       </p>
     </article>
   );

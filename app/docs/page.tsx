@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { docsNav } from "./_content/nav";
+import { DocsPageHeader } from "./_components/DocsPageHeader";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -10,51 +11,116 @@ export const metadata: Metadata = {
 export default function DocsHomePage() {
   return (
     <article data-doc="true" className="docs-content">
-      <h1 id="overview">Kashvi Framework Documentation</h1>
-      <p>
-        Kashvi is a Laravel-inspired Go web framework designed for rapid application development. It provides a clean, expressive API with powerful features like ORM, migrations, authentication, caching, queues, and more. Built on top of proven libraries like GORM, Chi router, and Redis, Kashvi helps you build scalable web applications and APIs quickly.
-      </p>
-      <p>
-        <em>Made with ❤️ by an Indian developer</em>.
+      <DocsPageHeader
+        id="overview"
+        eyebrow="Kashvi"
+        title="Framework documentation"
+        description={
+          <>
+            Kashvi is a Laravel-inspired Go web framework for APIs and web apps: ORM, migrations, JWT auth,
+            caching, queues, WebSockets, gRPC, and a CLI for scaffolding. Use the map below to jump to guides
+            and reference pages.
+          </>
+        }
+      />
+
+      <p className="text-zinc-500 dark:text-zinc-400">
+        <em>Made with care by an Indian developer.</em>
       </p>
 
-      <h2 id="key-features">Key Features</h2>
+      <h2 id="documentation-map">Documentation map</h2>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm">
+          <thead>
+            <tr className="bg-zinc-100 dark:bg-zinc-800">
+              <th className="text-left px-4 py-3 font-semibold">Goal</th>
+              <th className="text-left px-4 py-3 font-semibold">Where to read</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">Install CLI, new project, first run</td>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <Link href="/docs/installation">Installation &amp; Quick Start</Link>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">Full CRUD (model → DTO → migration → repo → tests)</td>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <Link href="/docs/user-crud">Complete CRUD walkthrough</Link>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">App logs and SQL (<code>LOG_LEVEL</code>, <code>DB_LOG_MODE</code>)</td>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <Link href="/docs/installation#logging">Logging</Link> on Installation
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">CLI (<code>migrate</code>, <code>make:resource</code>, …)</td>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <Link href="/docs/cli">CLI reference</Link>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">Routes, context, validation, auth</td>
+              <td className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
+                <Link href="/docs/routing">Routing</Link>, <Link href="/docs/context">Context</Link>,{" "}
+                <Link href="/docs/validation">Validation</Link>, <Link href="/docs/authentication">Authentication</Link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="key-features">Key features</h2>
       <ul>
-        <li><strong>MVC Architecture</strong>: Model-View-Controller pattern with clear separation of concerns</li>
-        <li><strong>Database ORM</strong>: GORM-powered query builder with support for MySQL, PostgreSQL, SQLite, and SQL Server</li>
-        <li><strong>Migrations</strong>: Database schema versioning and management</li>
-        <li><strong>Authentication</strong>: JWT-based auth with middleware</li>
-        <li><strong>Caching</strong>: Redis-backed caching system</li>
-        <li><strong>Queues</strong>: Background job processing with Redis</li>
-        <li><strong>WebSockets</strong>: Real-time communication support</li>
-        <li><strong>gRPC Support</strong>: High-performance RPC services</li>
-        <li><strong>Testing</strong>: Built-in test kit with JSON scenario files</li>
-        <li><strong>CLI Tool</strong>: Powerful scaffolding commands for rapid development</li>
+        <li>
+          <strong>MVC + DTOs</strong>: Controllers, services, repositories, models, and request/response DTOs
+        </li>
+        <li>
+          <strong>Database ORM</strong>: GORM-backed queries (MySQL, PostgreSQL, SQLite, SQL Server)
+        </li>
+        <li>
+          <strong>Migrations &amp; seeders</strong>: Versioned schema and data
+        </li>
+        <li>
+          <strong>Authentication</strong>: JWT middleware and optional RBAC
+        </li>
+        <li>
+          <strong>Caching &amp; queues</strong>: Redis-oriented integrations
+        </li>
+        <li>
+          <strong>WebSockets &amp; gRPC</strong>: Real-time and RPC alongside HTTP
+        </li>
+        <li>
+          <strong>Testing</strong>: TestKit with JSON scenario files
+        </li>
+        <li>
+          <strong>CLI</strong>: <code>kashvi new</code>, <code>kashvi make:*</code>, project-aware <code>serve</code> / <code>migrate</code>
+        </li>
       </ul>
 
       <h2 id="architecture">Architecture</h2>
       <p>
-        Kashvi follows a layered architecture with a <strong>repository layer</strong> so controllers and services do not call the ORM directly:
+        Kashvi follows <strong>MVC</strong> with a repository layer and <strong>DTOs</strong> for API
+        contracts. Controllers bind JSON to DTOs, validate, call repositories or services, and respond.
       </p>
       <pre className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4 text-sm font-mono overflow-x-auto">
 {`┌─────────────────┐
-│   Controllers   │ ← Handle HTTP, call services or repositories
+│  Controllers    │ ← HTTP; bind DTOs, call services/repositories
+├─────────────────┤
+│      DTOs       │ ← Request/response structs (CreateXRequest, …)
 ├─────────────────┤
 │    Services     │ ← Business logic (optional)
 ├─────────────────┤
-│  Repositories   │ ← Data access; encapsulate orm/DB calls
+│  Repositories   │ ← Data access; encapsulate ORM/DB calls
 ├─────────────────┤
-│     Models      │ ← Data structures (GORM models)
+│     Models      │ ← GORM models
 ├─────────────────┤
-│   Database      │ ← GORM with migrations
+│   Database      │ ← Migrations & GORM
 └─────────────────┘`}
       </pre>
-      <p>
-        Controllers and services depend on <strong>repositories</strong> (e.g. <code>UserRepository</code>) instead of <code>orm.DB()</code>. Repositories expose methods like <code>FindByID</code>, <code>All</code>, <code>Create</code>, <code>Update</code>, <code>Delete</code> and keep all data access in one place.
-      </p>
-      <p>
-        <strong>Where to start:</strong> After <Link href="/docs/installation" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Installation</Link> and Configure Environment, read the Logging section for app/DB log settings, then follow the <Link href="/docs/user-crud" className="text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Complete CRUD walkthrough</Link> to use model, migration, repository, service, controller, validation, auth, seeder, and tests together.
-      </p>
 
       <h2 id="start-here">Start here</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -63,7 +129,7 @@ export default function DocsHomePage() {
             Installation &amp; Quick Start
           </div>
           <div className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
-            Install the CLI, create an app, configure env, and run the server.
+            Install the CLI, create a project, configure env, and run the server.
           </div>
         </Link>
         <Link href="/docs/user-crud" className="docs-card block">
@@ -71,7 +137,7 @@ export default function DocsHomePage() {
             Complete CRUD walkthrough (Product API)
           </div>
           <div className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
-            Model → migration → repository → service → controller → validation → auth → seed → test.
+            Model → DTO → migration → repository → service → controller → auth → seed → test.
           </div>
         </Link>
       </div>

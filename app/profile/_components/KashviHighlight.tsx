@@ -97,7 +97,7 @@ export function KashviHighlight() {
 
                   <div className="flex flex-wrap items-end gap-4 sm:gap-6">
                     <Image
-                      src="/kashvi-logo.png"
+                      src="/kashvi.png"
                       alt="Kashvi"
                       width={180}
                       height={62}

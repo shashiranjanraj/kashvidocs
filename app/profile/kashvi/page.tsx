@@ -45,7 +45,7 @@ export default function KashviProfilePage() {
           </div>
 
           <div className="mb-8 flex items-center gap-4">
-            <Image src="/kashvi-logo.png" alt="Kashvi" width={160} height={56} className="h-12 w-auto sm:h-14" priority />
+            <Image src="/kashvi.png" alt="Kashvi" width={160} height={56} className="h-12 w-auto sm:h-14" priority />
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">

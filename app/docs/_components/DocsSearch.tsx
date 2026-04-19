@@ -1,7 +1,15 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
+import {
+  Box,
+  InputBase,
+  Paper,
+  Typography,
+  Divider,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { docsSearchIndex } from "../_content/nav";
 
 function norm(s: string) {
@@ -9,7 +17,7 @@ function norm(s: string) {
 }
 
 export function DocsSearch() {
-  const [q, setQ] = useState("");
+  const [q, setQ]                   = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const query = norm(q);
@@ -18,107 +26,188 @@ export function DocsSearch() {
     if (!query) return [];
     return docsSearchIndex
       .map((item) => {
-        const hay = norm(
-          [item.title, item.description, item.keywords.join(" ")].join(" "),
-        );
-        const score = hay.includes(query) ? 1 : 0;
-        return { item, score };
+        const hay = norm([item.title, item.description, item.keywords.join(" ")].join(" "));
+        return { item, score: hay.includes(query) ? 1 : 0 };
       })
       .filter((r) => r.score > 0)
       .slice(0, 10)
       .map((r) => r.item);
   }, [query]);
 
-  // Reset selected index when results change
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [results]);
+  useEffect(() => { setSelectedIndex(0); }, [results]);
 
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd+K or Ctrl+K to focus search
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         inputRef.current?.focus();
       }
-
-      // Arrow keys for navigation
       if (results.length > 0) {
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          setSelectedIndex((prev) => (prev + 1) % results.length);
-        }
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
-          setSelectedIndex((prev) => (prev - 1 + results.length) % results.length);
-        }
+        if (e.key === "ArrowDown") { e.preventDefault(); setSelectedIndex((p) => (p + 1) % results.length); }
+        if (e.key === "ArrowUp")   { e.preventDefault(); setSelectedIndex((p) => (p - 1 + results.length) % results.length); }
         if (e.key === "Enter") {
           e.preventDefault();
           const result = results[selectedIndex];
-          if (result) {
-            window.location.href = result.href;
-          }
+          if (result) window.location.href = result.href;
         }
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [results, selectedIndex]);
 
   return (
-    <div className="relative w-full max-w-md mx-auto group">
-      <div className="relative flex items-center">
-        <svg className="absolute left-3.5 h-4 w-4 text-zinc-400 group-focus-within:text-indigo-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          ref={inputRef}
+    <Box sx={{ position: "relative", width: "100%" }}>
+      {/* Search input */}
+      <Paper
+        elevation={0}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          borderRadius: "8px",
+          border: "1px solid",
+          borderColor: "divider",
+          bgcolor: "background.paper",
+          px: 1.5,
+          py: 0.35,
+          gap: 1,
+          "&:focus-within": {
+            borderColor: "primary.main",
+            boxShadow: (t) => `0 0 0 3px ${t.palette.primary.main}22`,
+          },
+          transition: "box-shadow 0.2s, border-color 0.2s",
+        }}
+      >
+        <SearchIcon sx={{ fontSize: 17, color: "text.secondary", flexShrink: 0 }} />
+        <InputBase
+          inputRef={inputRef}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search documentation..."
-          className="h-10 w-full rounded-lg border border-zinc-200/80 bg-white/50 dark:bg-zinc-900/40 pl-10 pr-28 text-sm text-zinc-900 dark:text-white shadow-sm outline-none transition-all placeholder:text-zinc-500 dark:placeholder:text-zinc-400 focus:border-indigo-500 dark:focus:border-indigo-400 focus:bg-white dark:focus:bg-zinc-900/60 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/20"
+          fullWidth
+          inputProps={{ "aria-label": "search documentation" }}
+          sx={{
+            fontSize: "0.875rem",
+            color: "text.primary",
+            "& input::placeholder": { color: "text.secondary", opacity: 1 },
+          }}
         />
-        <div className="absolute right-3 hidden items-center gap-1 sm:flex pointer-events-none">
-          <kbd className="inline-flex h-5 items-center justify-center rounded border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-1.5 font-mono text-[10px] font-medium text-zinc-400 dark:text-zinc-500">⌘</kbd>
-          <kbd className="inline-flex h-5 items-center justify-center rounded border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-1.5 font-mono text-[10px] font-medium text-zinc-400 dark:text-zinc-500">K</kbd>
-        </div>
-      </div>
+        <Box
+          sx={{
+            display: { xs: "none", sm: "flex" },
+            gap: 0.5,
+            flexShrink: 0,
+            pointerEvents: "none",
+          }}
+        >
+          {["⌘", "K"].map((k) => (
+            <Box
+              key={k}
+              component="kbd"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 18,
+                minWidth: 18,
+                px: 0.75,
+                borderRadius: "4px",
+                border: "1px solid",
+                borderColor: "divider",
+                bgcolor: "background.default",
+                fontFamily: "var(--font-jetbrains-mono), monospace",
+                fontSize: "0.625rem",
+                fontWeight: 500,
+                color: "text.secondary",
+              }}
+            >
+              {k}
+            </Box>
+          ))}
+        </Box>
+      </Paper>
 
+      {/* Results dropdown */}
       {results.length > 0 ? (
-        <div className="absolute left-0 right-0 top-12 z-50 overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 shadow-2xl backdrop-blur-xl transition-all animate-in fade-in-0 zoom-in-95">
-          <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: "calc(100% + 6px)",
+            zIndex: 9999,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: "10px",
+            overflow: "hidden",
+          }}
+        >
+          <Box sx={{ maxHeight: 380, overflowY: "auto" }}>
             {results.map((r, i) => (
-              <Link
+              <Box
                 key={r.href}
+                component={NextLink}
                 href={r.href}
                 onClick={() => setQ("")}
-                className={`flex flex-col gap-1.5 px-4 py-3 text-sm transition-all border-l-2 ${i === selectedIndex
-                    ? "border-l-indigo-500 bg-indigo-50 dark:bg-indigo-950/30"
-                    : "border-l-transparent hover:border-l-indigo-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                  }`}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 0.25,
+                  px: 2,
+                  py: 1.25,
+                  textDecoration: "none",
+                  borderLeft: "2px solid",
+                  borderColor: i === selectedIndex ? "primary.main" : "transparent",
+                  bgcolor: i === selectedIndex ? "primary.50" : "background.paper",
+                  "&:hover": { bgcolor: "action.hover" },
+                  transition: "background 0.15s",
+                }}
               >
-                <div className="font-semibold text-zinc-900 dark:text-zinc-100">
+                <Typography variant="body2" fontWeight={600} color="text.primary">
                   {r.title}
-                </div>
-                {r.description ? (
-                  <div className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                </Typography>
+                {r.description && (
+                  <Typography variant="caption" color="text.secondary" noWrap>
                     {r.description}
-                  </div>
-                ) : null}
-              </Link>
+                  </Typography>
+                )}
+              </Box>
             ))}
-          </div>
-          <div className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400 flex items-center justify-between">
-            <span>Use <kbd className="bg-white dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[10px] font-mono border border-zinc-200 dark:border-zinc-700">↑↓</kbd> to navigate, <kbd className="bg-white dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[10px] font-mono border border-zinc-200 dark:border-zinc-700">Enter</kbd> to select</span>
-          </div>
-        </div>
+          </Box>
+          <Divider />
+          <Box
+            sx={{ px: 2, py: 0.75, bgcolor: "background.default", display: "flex", gap: 1 }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              Use{" "}
+              <Box component="kbd" sx={{ fontFamily: "monospace", fontWeight: 600 }}>↑↓</Box>
+              {" "}to navigate,{" "}
+              <Box component="kbd" sx={{ fontFamily: "monospace", fontWeight: 600 }}>Enter</Box>
+              {" "}to select
+            </Typography>
+          </Box>
+        </Paper>
       ) : q ? (
-        <div className="absolute left-0 right-0 top-12 z-50 overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 shadow-2xl backdrop-blur-xl p-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          No results found for &quot;{q}&quot;
-        </div>
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            left: 0, right: 0,
+            top: "calc(100% + 6px)",
+            zIndex: 9999,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: "10px",
+            px: 3, py: 2,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            No results for &ldquo;{q}&rdquo;
+          </Typography>
+        </Paper>
       ) : null}
-    </div>
+    </Box>
   );
 }

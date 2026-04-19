@@ -1,44 +1,35 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Box, Link, Typography } from "@mui/material";
 
 type TocItem = { id: string; title: string; level: 2 | 3 };
 
 function getHeadings(): TocItem[] {
   const root = document.querySelector<HTMLElement>('article[data-doc="true"]');
   if (!root) return [];
-
   const nodes = Array.from(root.querySelectorAll("h2, h3")) as HTMLElement[];
   const items: TocItem[] = [];
-
   for (const el of nodes) {
     const level = el.tagName === "H2" ? 2 : 3;
     const title = (el.textContent ?? "").trim();
-    const id = el.id?.trim();
+    const id    = el.id?.trim();
     if (!id || !title) continue;
     items.push({ id, title, level });
   }
-
   return items;
 }
 
 export function Toc() {
-  const [items, setItems] = useState<TocItem[]>([]);
+  const [items, setItems]   = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    // slight delay to let content render
-    setTimeout(() => {
-      setItems(getHeadings());
-    }, 100);
-
+    setTimeout(() => setItems(getHeadings()), 100);
     const root = document.querySelector<HTMLElement>('article[data-doc="true"]');
     if (!root) return;
-
-    const update = () => setItems(getHeadings());
-    const mo = new MutationObserver(update);
+    const mo = new MutationObserver(() => setItems(getHeadings()));
     mo.observe(root, { childList: true, subtree: true });
-
     return () => mo.disconnect();
   }, []);
 
@@ -57,48 +48,68 @@ export function Toc() {
       },
       { rootMargin: "-80px 0px -70% 0px", threshold: [0, 1] },
     );
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
+    ids.forEach((id) => { const el = document.getElementById(id); if (el) observer.observe(el); });
     return () => observer.disconnect();
   }, [ids]);
 
   if (items.length === 0) {
     return (
-      <div className="text-sm text-zinc-500 italic dark:text-zinc-500">
-        No headings found on this page.
-      </div>
+      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: "italic" }}>
+        No headings found.
+      </Typography>
     );
   }
 
   return (
-    <nav className="flex flex-col relative text-[13px]">
-      <div className="absolute left-0 top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800" />
-
+    <Box
+      component="nav"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        fontSize: "0.8125rem",
+        borderLeft: "1px solid",
+        borderColor: "divider",
+      }}
+    >
       {items.map((i) => {
         const active = i.id === activeId;
         return (
-          <a
-            key={i.id}
-            href={`#${i.id}`}
-            className={[
-              "relative pl-4 py-1.5 transition-all duration-200 hover:text-zinc-900 dark:hover:text-zinc-100",
-              i.level === 3 ? "ml-2" : "",
-              active
-                ? "font-semibold text-indigo-600 dark:text-indigo-400"
-                : "text-zinc-500 dark:text-zinc-400",
-            ].join(" ")}
-          >
+          <Box key={i.id} sx={{ position: "relative" }}>
             {active && (
-              <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: "2px",
+                  bgcolor: "primary.main",
+                  borderRadius: "999px",
+                }}
+              />
             )}
-            {i.title}
-          </a>
+            <Link
+              href={`#${i.id}`}
+              underline="none"
+              sx={{
+                display: "block",
+                pl: i.level === 3 ? 3.5 : 2,
+                pr: 1,
+                py: 0.75,
+                fontSize: "inherit",
+                lineHeight: 1.4,
+                color: active ? "primary.main" : "text.secondary",
+                fontWeight: active ? 600 : 400,
+                transition: "color 0.15s",
+                "&:hover": { color: "text.primary" },
+              }}
+            >
+              {i.title}
+            </Link>
+          </Box>
         );
       })}
-    </nav>
+    </Box>
   );
 }

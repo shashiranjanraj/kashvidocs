@@ -1,89 +1,106 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import Image from "next/image";
+import {
+  Drawer,
+  Box,
+  IconButton,
+  Divider,
+} from "@mui/material";
+import MenuIcon  from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import { DocsSidebar } from "./DocsSidebar";
-import { DocsSearch } from "./DocsSearch";
+import { DocsSearch }  from "./DocsSearch";
+
+const DRAWER_W = 280;
 
 export function DocsMobileNav() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!open) {
-      document.body.style.overflow = '';
-      return;
-    }
-    document.body.style.overflow = 'hidden';
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = '';
-    }
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   return (
     <>
-      <button
-        type="button"
+      {/* Hamburger — only on small screens */}
+      <IconButton
         aria-label="Open navigation"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 transition-colors dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 lg:hidden"
+        size="small"
+        sx={{
+          display: { lg: "none" },
+          color: "text.secondary",
+          "&:hover": { color: "text.primary", bgcolor: "action.hover" },
+        }}
       >
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+        <MenuIcon />
+      </IconButton>
 
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm transition-opacity"
+      {/* MUI Drawer */}
+      <Drawer
+        variant="temporary"
+        open={open}
+        onClose={() => setOpen(false)}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: "block", lg: "none" },
+          "& .MuiDrawer-paper": {
+            width: DRAWER_W,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 2,
+            py: 1.5,
+            borderBottom: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <NextLink href="/docs" onClick={() => setOpen(false)}>
+            <Image
+              src="/kashvi2.png"
+              alt="Kashvi"
+              width={120}
+              height={36}
+              style={{ height: 30, width: "auto", objectFit: "contain" }}
+            />
+          </NextLink>
+          <IconButton
+            size="small"
             onClick={() => setOpen(false)}
-          />
+            sx={{ color: "text.secondary" }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
 
-          {/* Panel */}
-          <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm flex flex-col bg-white shadow-2xl dark:bg-black border-r border-zinc-200 dark:border-zinc-800">
-            <div className="flex items-center justify-between p-4 border-b border-zinc-200/50 dark:border-zinc-800/50">
-              <Link
-                href="/docs"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2"
-              >
-                <Image
-                  src="/kashvi-logo.png"
-                  alt="Kashvi Framework"
-                  width={100}
-                  height={35}
-                  className="h-8 w-auto"
-                />
-              </Link>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 transition-colors"
-              >
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+        {/* Search */}
+        <Box sx={{ px: 1.5, py: 1.5 }}>
+          <DocsSearch />
+        </Box>
 
-            <div className="flex-1 overflow-y-auto px-4 py-6">
-              <div className="mb-6">
-                <DocsSearch />
-              </div>
-              <div onClickCapture={() => setOpen(false)}>
-                <DocsSidebar />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+        <Divider />
+
+        {/* Nav links */}
+        <Box
+          sx={{ flex: 1, overflowY: "auto", px: 1, py: 1 }}
+          onClick={() => setOpen(false)}
+        >
+          <DocsSidebar />
+        </Box>
+      </Drawer>
     </>
   );
 }

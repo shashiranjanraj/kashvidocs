@@ -1,441 +1,207 @@
 @import "tailwindcss";
 
-/* All pages: no underline on links — use color / weight from utilities instead */
-@layer base {
-  a,
-  a:visited,
-  a:hover,
-  a:active,
-  a:focus,
-  a:focus-visible {
-    text-decoration: none;
-    text-decoration-line: none;
-    text-underline-offset: 0;
-  }
-}
+/* ────────────────────────────────────────────────────────────────────────────
+   Kashvi Docs — Global CSS (MUI redesign)
+   Only contains: CSS custom properties, scroll-mt helpers, doc prose, and
+   Prism code-block overrides. All layout/color tokens live in app/theme.ts.
+   ──────────────────────────────────────────────────────────────────────────── */
 
+/* Font variables injected by Next.js/Google Fonts */
 :root {
-  --background: #ffffff;
-  --foreground: #09090b;
-  --accent: #6366f1;
-  /* indigo-500 */
-  --accent-foreground: #ffffff;
-  --ring: #6366f1;
-  --border: #e4e4e7;
-  --glass: rgba(255, 255, 255, 0.75);
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans), Inter, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+/* Scroll margin so fixed header doesn't overlap jump targets */
+h1, h2, h3, h4, h5, h6 {
+  scroll-margin-top: 80px;
+}
+
+/* ── Doc article prose ───────────────────────────────────────────────────── */
+article[data-doc="true"] {
+  color: #374151;
+  line-height: 1.8;
+  font-size: 0.9375rem;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f0f1e;
-    --foreground: #f0f0f5;
-    --accent: #818cf8;
-    /* indigo-400 */
-    --accent-foreground: #0f0f1e;
-    --ring: #818cf8;
-    --border: #2d2d4a;
-    --glass: rgba(15, 15, 30, 0.65);
-    --primary: #818cf8;
-    --primary-light: #a5b4fc;
-    --success: #34d399;
-    --warning: #fbbf24;
-    --danger: #f87171;
-  }
+  article[data-doc="true"] { color: #d1d5db; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 40% 0%, rgba(34, 197, 94, 0.04) 0%, transparent 40%);
-  background-attachment: fixed;
-}
-
-/* Base structural layers */
-@layer components {
-  .docs-shell {
-    @apply min-h-screen text-zinc-950 dark:text-zinc-50;
-    background-color: transparent;
-  }
-
-  .docs-content {
-    @apply text-[16px] leading-[1.8] text-zinc-600 dark:text-zinc-300;
-  }
-
-  .docs-content h1 {
-    @apply mt-0 mb-8 scroll-mt-24 text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white;
-  }
-
-  .docs-content h2 {
-    @apply mt-12 mb-6 scroll-mt-24 pb-3 text-3xl font-bold tracking-tight text-zinc-900 dark:text-white border-b border-zinc-200 dark:border-zinc-700/50;
-    position: relative;
-  }
-
-  .docs-content h2::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(to right, #a5b4fc, #c084fc, #f472b6, transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .docs-content h2:hover::after {
-    opacity: 0.5;
-  }
-
-  .docs-content h3 {
-    @apply mt-8 mb-4 scroll-mt-24 text-xl font-bold tracking-tight text-zinc-900 dark:text-white;
-  }
-
-  .docs-content h4 {
-    @apply mt-6 mb-3 text-lg font-semibold text-zinc-900 dark:text-white;
-  }
-
-  .docs-content p {
-    @apply mt-0 mb-6;
-  }
-
-  .docs-content a {
-    @apply font-semibold text-indigo-600 no-underline transition-colors duration-200 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300;
-  }
-
-  /* Typography / prose links — beat plugin defaults (often underline) */
-  .docs-shell .prose :where(a):not([data-footnote-backref]) {
-    @apply font-semibold text-indigo-600 no-underline transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300;
-    text-decoration: none !important;
-  }
-
-  .prose :where(a):not([data-footnote-backref]) {
-    text-decoration: none !important;
-  }
-
-  .docs-content ul {
-    @apply mt-0 mb-6 list-disc pl-6 marker:text-indigo-400 dark:marker:text-indigo-500 space-y-2;
-  }
-
-  .docs-content ol {
-    @apply mt-0 mb-6 list-decimal pl-6 marker:text-indigo-400 dark:marker:text-indigo-500 text-zinc-900 font-semibold dark:text-white space-y-2;
-  }
-
-  .docs-content li {
-    @apply my-2 font-normal text-zinc-600 dark:text-zinc-300;
-  }
-
-  /* Inline code style */
-  .docs-content p>code,
-  .docs-content li>code,
-  .docs-content td>code {
-    @apply rounded-lg bg-indigo-50 dark:bg-indigo-950/40 px-2 py-1 font-mono text-[13px] font-semibold text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 shadow-sm transition-all hover:shadow-md;
-  }
-
-  /* Pre block - modern code blocks */
-  .docs-content pre {
-    @apply mt-6 mb-8 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700/50 bg-zinc-50 dark:bg-zinc-900/50 py-4 px-4 text-sm shadow-lg dark:shadow-xl dark:shadow-black/30 relative;
-    scrollbar-width: thin;
-    scrollbar-color: #a1a1aa transparent;
-  }
-
-  .docs-content pre::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .docs-content pre::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .docs-content pre::-webkit-scrollbar-thumb {
-    @apply bg-zinc-300 dark:bg-zinc-600 rounded-full;
-    border-radius: 10px;
-  }
-
-  .docs-content pre::-webkit-scrollbar-thumb:hover {
-    @apply bg-zinc-400 dark:bg-zinc-500;
-  }
-
-  .docs-content code {
-    @apply font-mono text-zinc-700 dark:text-zinc-200;
-  }
-
-  /* Terminal code block styling - pure macOS terminal look */
-  .terminal-codeblock code,
-  .terminal-codeblock code span {
-    @apply !text-white !bg-transparent !border-none !shadow-none !px-0 !py-0;
-  }
-
-  .terminal-codeblock pre {
-    @apply !rounded-none !border-none !bg-black !shadow-none !px-0 !py-0 !mt-0 !mb-0;
-  }
-
-  .terminal-codeblock {
-    @apply !rounded-lg !shadow-none !border-none;
-  }
-
-  .docs-content table {
-    @apply mt-8 mb-8 w-full border-collapse rounded-xl overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-700;
-  }
-
-  .docs-content thead th {
-    @apply bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/50 dark:to-purple-950/50 px-4 py-3 text-left font-semibold text-zinc-900 dark:text-zinc-100 text-sm border-b border-zinc-200 dark:border-zinc-700;
-  }
-
-  .docs-content tbody td {
-    @apply px-4 py-3 align-top text-sm border-b border-zinc-100 dark:border-zinc-800/50 text-zinc-600 dark:text-zinc-300;
-  }
-
-  .docs-content tbody tr:hover {
-    @apply bg-indigo-50/50 dark:bg-indigo-950/20 transition-colors;
-  }
-
-  .docs-content tbody tr:last-child td {
-    @apply border-0;
-  }
-
-  /* Callout boxes */
-  .docs-callout {
-    @apply mt-6 mb-8 rounded-lg border-l-4 p-4 backdrop-blur-sm;
-  }
-
-  .docs-callout.note {
-    @apply border-l-blue-500 bg-blue-50 dark:bg-blue-950/20 dark:border-l-blue-400;
-  }
-
-  .docs-callout.warning {
-    @apply border-l-amber-500 bg-amber-50 dark:bg-amber-950/20 dark:border-l-amber-400;
-  }
-
-  .docs-callout.success {
-    @apply border-l-green-500 bg-green-50 dark:bg-green-950/20 dark:border-l-green-400;
-  }
-
-  .docs-callout.danger {
-    @apply border-l-red-500 bg-red-50 dark:bg-red-950/20 dark:border-l-red-400;
-  }
-
-  .docs-callout-title {
-    @apply font-bold text-sm mb-2;
-  }
-
-  .docs-callout.note .docs-callout-title {
-    @apply text-blue-900 dark:text-blue-300;
-  }
-
-  .docs-callout.warning .docs-callout-title {
-    @apply text-amber-900 dark:text-amber-300;
-  }
-
-  .docs-callout.success .docs-callout-title {
-    @apply text-green-900 dark:text-green-300;
-  }
-
-  .docs-callout.danger .docs-callout-title {
-    @apply text-red-900 dark:text-red-300;
-  }
-
-  /* Feature cards */
-  .docs-card {
-    @apply relative p-6 rounded-xl border border-zinc-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-900/30 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1 cursor-pointer;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(249, 250, 251, 0.5) 100%);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .docs-card {
-      background: linear-gradient(135deg, rgba(24, 25, 38, 0.4) 0%, rgba(20, 21, 32, 0.2) 100%);
-    }
-  }
-
-  .docs-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 0.75rem;
-    padding: 1px;
-    background: linear-gradient(135deg, transparent, transparent);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-
-  .docs-card:hover::before {
-    background: linear-gradient(135deg, rgba(129, 140, 248, 0.3), rgba(139, 92, 246, 0.3));
-  }
-
-  .accent-text {
-    @apply text-[color:var(--accent)] font-semibold hover:text-[color:var(--accent)]/80 transition-colors;
-  }
-
-  /* Stats */
-  .stat-card {
-    @apply flex flex-col items-start p-6 rounded-lg bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 border border-indigo-200 dark:border-indigo-800/30 transition-all hover:shadow-lg;
-  }
-
-  .stat-number {
-    @apply text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400;
-  }
-
-  .stat-label {
-    @apply text-sm font-semibold text-zinc-600 dark:text-zinc-300 mt-2;
-  }
-
-  /* Icon styles */
-  .icon-box {
-    @apply flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-950/50 dark:to-purple-950/50 text-indigo-600 dark:text-indigo-400;
-  }
-}
-
-/* Glass panel components */
-.glass-panel {
-  @apply bg-white/80 dark:bg-black/40 backdrop-blur-2xl border border-zinc-200/60 dark:border-white/10 shadow-lg;
-}
-
-.hover-glow {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover-glow:hover {
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.2), 0 0 60px rgba(99, 102, 241, 0.1);
+article[data-doc="true"] h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {
-  .hover-glow:hover {
-    box-shadow: 0 0 40px rgba(129, 140, 248, 0.15), 0 0 80px rgba(129, 140, 248, 0.08);
-  }
+  article[data-doc="true"] h2 { color: #f9fafb; border-bottom-color: #1f2937; }
 }
 
-/* Gradient button styles */
-.btn-gradient {
-  @apply relative inline-flex items-center justify-center px-6 py-3 font-semibold rounded-lg transition-all duration-300 overflow-hidden;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-}
-
-.btn-gradient:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-}
-
-.btn-gradient-outline {
-  @apply relative inline-flex items-center justify-center px-6 py-3 font-semibold rounded-lg transition-all duration-300 border-2 border-transparent;
-  background: linear-gradient(#fff, #fff) padding-box,
-              linear-gradient(135deg, #6366f1, #8b5cf6) border-box;
-  color: #6366f1;
+article[data-doc="true"] h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
 }
 
 @media (prefers-color-scheme: dark) {
-  .btn-gradient-outline {
-    background: linear-gradient(#0f0f1e, #0f0f1e) padding-box,
-                linear-gradient(135deg, #818cf8, #a78bfa) border-box;
-    color: #818cf8;
+  article[data-doc="true"] h3 { color: #f3f4f6; }
+}
+
+article[data-doc="true"] h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  article[data-doc="true"] h4 { color: #f3f4f6; }
+}
+
+article[data-doc="true"] p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+article[data-doc="true"] a {
+  color: #4338ca;
+  font-weight: 500;
+  text-decoration: none;
+}
+article[data-doc="true"] a:hover {
+  color: #3730a3;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  article[data-doc="true"] a { color: #818cf8; }
+  article[data-doc="true"] a:hover { color: #a5b4fc; }
+}
+
+article[data-doc="true"] ul,
+article[data-doc="true"] ol {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+article[data-doc="true"] li {
+  margin-bottom: 0.35rem;
+}
+
+/* Inline code */
+article[data-doc="true"] p code,
+article[data-doc="true"] li code,
+article[data-doc="true"] td code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #eef2ff;
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+}
+
+@media (prefers-color-scheme: dark) {
+  article[data-doc="true"] p code,
+  article[data-doc="true"] li code,
+  article[data-doc="true"] td code {
+    background: rgba(67, 56, 202, 0.12);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.25);
   }
 }
 
-.btn-gradient-outline:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+/* Tables */
+article[data-doc="true"] table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0 2rem;
+  font-size: 0.875rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* Smooth content transitions */
-main {
-  animation: fade-in 0.6s ease-out;
+article[data-doc="true"] thead th {
+  background: #f8fafc;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+article[data-doc="true"] tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+  vertical-align: top;
 }
 
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
+article[data-doc="true"] tbody tr:last-child td { border-bottom: none; }
+article[data-doc="true"] tbody tr:hover td    { background: #f8fafc; }
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+@media (prefers-color-scheme: dark) {
+  article[data-doc="true"] table  { border-color: #1f2937; }
+  article[data-doc="true"] thead th { background: #111827; color: #d1d5db; border-bottom-color: #1f2937; }
+  article[data-doc="true"] tbody td { color: #9ca3af; border-bottom-color: #111827; }
+  article[data-doc="true"] tbody tr:hover td { background: #0f172a; }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3);
-  }
-
-  50% {
-    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s infinite;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-zinc-300 dark:bg-zinc-600 rounded-full;
-  transition: background 0.3s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-zinc-400 dark:bg-zinc-500;
-}
-
-/* Badge styles */
+/* ── Badge helpers (used in content pages) ────────────────────────────────── */
 .badge {
-  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
-.badge-blue {
-  @apply bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300;
+.badge-green  { background: #dcfce7; color: #15803d; }
+.badge-amber  { background: #fef9c3; color: #a16207; }
+.badge-indigo { background: #eef2ff; color: #4338ca; }
+.badge-purple { background: #f3e8ff; color: #7c3aed; }
+.badge-blue   { background: #dbeafe; color: #1d4ed8; }
+
+@media (prefers-color-scheme: dark) {
+  .badge-green  { background: rgba(21,128,61,0.18);  color: #86efac; }
+  .badge-amber  { background: rgba(161,98,7,0.18);   color: #fde047; }
+  .badge-indigo { background: rgba(67,56,202,0.18);  color: #a5b4fc; }
+  .badge-purple { background: rgba(124,58,237,0.18); color: #d8b4fe; }
+  .badge-blue   { background: rgba(29,78,216,0.18);  color: #93c5fd; }
 }
 
-.badge-indigo {
-  @apply bg-indigo-100 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300;
+/* ── Prism code-block overrides ───────────────────────────────────────────── */
+/* These sit inside our custom CodeBlock component — just keep font */
+.code-block-outer code,
+.code-block-outer code span,
+.code-block-outer pre {
+  font-family: var(--font-mono) !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.65 !important;
 }
 
-.badge-purple {
-  @apply bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300;
-}
-
-.badge-green {
-  @apply bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300;
-}
-
-.badge-amber {
-  @apply bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300;
+/* Terminal inside CodeBlock */
+.terminal-codeblock code,
+.terminal-codeblock code span {
+  color: #fff !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
 }

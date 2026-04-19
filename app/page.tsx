@@ -9,7 +9,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link href="/" className="group flex items-center gap-2.5">
             <Image
-              src="/kashvi-logo.png"
+              src="/kashvi.png"
               alt="Kashvi Framework"
               width={140}
               height={48}
@@ -248,7 +248,7 @@ export default function Home() {
             <div>
               <Link href="/" className="inline-block mb-4">
                 <Image
-                  src="/kashvi-logo.png"
+                  src="/kashvi.png"
                   alt="Kashvi Framework"
                   width={120}
                   height={42}

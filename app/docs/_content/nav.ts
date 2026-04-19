@@ -20,12 +20,7 @@ export const docsNav: DocGroup[] = [
         description: "What is Kashvi and how to use these docs.",
         keywords: ["kashvi", "docs", "overview"],
       },
-      {
-        title: "Creator — Kashvi framework",
-        href: "/profile/kashvi",
-        description: "Meet the engineer behind Kashvi — framework story, links, and back to docs.",
-        keywords: ["creator", "author", "shashi", "about"],
-      },
+
       {
         title: "Installation & Quick Start",
         href: "/docs/installation",
@@ -35,8 +30,8 @@ export const docsNav: DocGroup[] = [
       {
         title: "Complete CRUD Walkthrough (Product)",
         href: "/docs/user-crud",
-        description: "Model → migration → repository → service → controller → validation → auth → seed → test.",
-        keywords: ["crud", "product", "validation", "repository", "routes"],
+        description: "Model → DTO → migration → repository → service → controller → validation → auth → seed → test.",
+        keywords: ["crud", "product", "dto", "validation", "repository", "routes"],
       },
     ],
   },

@@ -27,7 +27,7 @@ export function ProfileShell({ children }: Props) {
       <header className="sticky top-0 z-50 border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-zinc-300 transition hover:text-white">
-            <Image src="/kashvi-logo.png" alt="" width={100} height={36} className="h-8 w-auto opacity-90" />
+            <Image src="/kashvi.png" alt="" width={100} height={36} className="h-8 w-auto opacity-90" />
             <span className="hidden sm:inline">Kashvi</span>
           </Link>
           <nav className="flex items-center gap-1 sm:gap-3">

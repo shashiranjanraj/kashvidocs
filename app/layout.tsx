@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { MuiProviders } from "./_components/MuiProviders";
 import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -42,11 +46,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-dvh bg-white text-zinc-950 antialiased selection:bg-indigo-500/30 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:selection:bg-indigo-500/30`}
-      >
-        {children}
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <body>
+        <AppRouterCacheProvider>
+          <MuiProviders>
+            {children}
+          </MuiProviders>
+        </AppRouterCacheProvider>
         <Analytics />
       </body>
     </html>

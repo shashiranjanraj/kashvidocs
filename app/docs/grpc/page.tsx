@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Callout } from "../_components/Callout";
 import { CodeBlock } from "../_components/CodeBlock";
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export default function GrpcPage() {
 
       <h2 id="grpc-auto-start">What starts automatically</h2>
       <p>
-        When you run <code>kashvi run</code>, both servers boot:
+        When you run <code>kashvi serve</code> (or <code>go run . serve</code>) with your app, HTTP and gRPC both boot when configured:
       </p>
       <CodeBlock>
         {`🚀 Kashvi HTTP  on :8080  [env: local]  [workers: 8]
@@ -97,7 +98,10 @@ mypb.RegisterUserServiceServer(grpcSrv, &UserServiceImpl{})`}
       </CodeBlock>
 
       <h2 id="grpc-standalone">Standalone gRPC server (CLI)</h2>
-      <p>Run the gRPC server without the HTTP server:</p>
+      <Callout type="note" title="Framework repository">
+        The <code>kashvi grpc:serve</code> command is registered when the CLI runs from a Kashvi framework checkout. Typical apps rely on <code>serve</code> to start gRPC with HTTP.
+      </Callout>
+      <p>Run the gRPC server without the HTTP server (framework dev / clone):</p>
       <CodeBlock>{`kashvi grpc:serve`}</CodeBlock>
 
       <h2 id="grpc-custom-interceptor">Adding a custom interceptor</h2>
