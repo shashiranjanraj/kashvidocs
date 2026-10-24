@@ -53,6 +53,13 @@ api.Post("/users", "users.store", appctx.Wrap(ctrl.Store))
 admin := api.Group("/admin", middleware.AuthMiddleware, middleware.RequireRole("admin"))
 admin.Get("/stats", "admin.stats", appctx.Wrap(adminCtrl.Stats))`}
       </CodeBlock>
+      <p>
+        <code>middleware.RateLimit</code> counts requests per client IP (the
+        first <code>X-Forwarded-For</code> entry, or the connection address
+        without its port). Each call keeps its own counters. The kernel also
+        applies a global limit of <code>RATE_LIMIT_MAX</code> requests per
+        minute (default 2000).
+      </p>
 
       <h2 id="url-parameters">URL Parameters</h2>
       <CodeBlock>

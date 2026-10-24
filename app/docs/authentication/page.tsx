@@ -36,6 +36,27 @@ if err != nil {
 userID := claims.UserID   // uint
 role   := claims.Role     // string`}
       </CodeBlock>
+      <p>
+        <code>ValidateToken</code> only accepts access tokens: a refresh token
+        is rejected with <code>auth.ErrRefreshToken</code>, so it cannot be
+        used to call protected routes. Tokens must be signed with HS256.
+      </p>
+
+      <h2 id="refreshing-tokens">Refreshing Tokens</h2>
+      <p>
+        Use <code>ValidateRefreshToken</code> to exchange a refresh token for a
+        new access token. It rejects access tokens with{" "}
+        <code>auth.ErrNotRefreshToken</code>.
+      </p>
+      <CodeBlock>
+        {`claims, err := auth.ValidateRefreshToken(refreshToken)
+if err != nil {
+    ctx.Error(http.StatusUnauthorized, "Invalid refresh token")
+    return
+}
+
+token, err := auth.GenerateToken(claims.UserID, claims.Role)`}
+      </CodeBlock>
 
       <h2 id="password-hashing">Password Hashing</h2>
       <CodeBlock>
