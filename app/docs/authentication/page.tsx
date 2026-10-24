@@ -36,6 +36,27 @@ if err != nil {
 userID := claims.UserID   // uint
 role   := claims.Role     // string`}
       </CodeBlock>
+      <p>
+        <code>ValidateToken</code> only accepts access tokens: a refresh token
+        is rejected with <code>auth.ErrRefreshToken</code>, so it cannot be
+        used to call protected routes. Tokens must be signed with HS256.
+      </p>
+
+      <h2 id="refreshing-tokens">Refreshing Tokens</h2>
+      <p>
+        Use <code>ValidateRefreshToken</code> to exchange a refresh token for a
+        new access token. It rejects access tokens with{" "}
+        <code>auth.ErrNotRefreshToken</code>.
+      </p>
+      <CodeBlock>
+        {`claims, err := auth.ValidateRefreshToken(refreshToken)
+if err != nil {
+    ctx.Error(http.StatusUnauthorized, "Invalid refresh token")
+    return
+}
+
+token, err := auth.GenerateToken(claims.UserID, claims.Role)`}
+      </CodeBlock>
 
       <h2 id="password-hashing">Password Hashing</h2>
       <CodeBlock>
@@ -152,13 +173,36 @@ func (c *AuthController) Login(ctx *appctx.Context) {
               Must change in production — server refuses to start otherwise.
             </td>
           </tr>
+          <tr>
+            <td>
+              <code>JWT_TTL</code>
+            </td>
+            <td><code>24h</code></td>
+            <td>Access-token lifetime</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_REFRESH_TTL</code>
+            </td>
+            <td><code>168h</code></td>
+            <td>Refresh-token lifetime</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_ISSUER</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>iss</code> and required on validation</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_AUDIENCE</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>aud</code> and required on validation</td>
+          </tr>
         </tbody>
       </table>
-      <p>
-        Access tokens expire in <strong>24 hours</strong>, refresh tokens in{" "}
-        <strong>7 days</strong>. Both values can be changed in{" "}
-        <code>pkg/auth/jwt.go</code>.
-      </p>
     </article>
   );
 }
