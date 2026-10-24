@@ -11,17 +11,19 @@ export default function ConfigurationPage() {
   return (
     <article data-doc="true" className="docs-content">
       <h1 id="configuration">Configuration</h1>
-      <p>Kashvi reads configuration from two sources, merged in order:</p>
+      <p>Kashvi resolves each setting from these sources, highest priority first:</p>
       <ol>
-        <li>
-          <code>config/app.json</code> — committed defaults
-        </li>
+        <li>OS environment variables — e.g. set by Docker or Kubernetes</li>
         <li>
           <code>.env</code> — local overrides (never commit this)
         </li>
+        <li>
+          <code>config/app.json</code> — committed defaults
+        </li>
       </ol>
       <p>
-        <code>.env</code> values always win over <code>config/app.json</code>.
+        Empty values fall through to the next source. In <code>.env</code>,
+        unquoted values may carry a trailing <code># comment</code>.
       </p>
 
       <h2 id="env-vars">All Environment Variables</h2>
@@ -79,8 +81,79 @@ export default function ConfigurationPage() {
 
       <Callout type="caution" title="Production safety">
         The server refuses to start in production if <code>JWT_SECRET</code> is
-        the default value.
+        the default value, and logs a warning if <code>APP_KEY</code> is unset.
+        To keep data encrypted under the old fallback readable, set{" "}
+        <code>APP_KEY</code> to your current <code>JWT_SECRET</code>.
       </Callout>
+
+      <h3 id="security">Auth &amp; Security</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <code>APP_KEY</code>
+            </td>
+            <td>(empty)</td>
+            <td>Encryption key for <code>pkg/crypt</code>; falls back to <code>JWT_SECRET</code> when unset</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_TTL</code>
+            </td>
+            <td><code>24h</code></td>
+            <td>Access-token lifetime (Go duration)</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_REFRESH_TTL</code>
+            </td>
+            <td><code>168h</code></td>
+            <td>Refresh-token lifetime</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_ISSUER</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>iss</code> and required on validation</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_AUDIENCE</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>aud</code> and required on validation</td>
+          </tr>
+          <tr>
+            <td>
+              <code>CORS_ALLOWED_ORIGINS</code>
+            </td>
+            <td><code>*</code></td>
+            <td>Comma-separated origins used by <code>middleware.DefaultCORSOptions()</code></td>
+          </tr>
+          <tr>
+            <td>
+              <code>TRUSTED_PROXIES</code>
+            </td>
+            <td>loopback + private networks</td>
+            <td>IPs/CIDRs whose <code>X-Forwarded-For</code> the rate limiter trusts</td>
+          </tr>
+          <tr>
+            <td>
+              <code>RATE_LIMIT_MAX</code>
+            </td>
+            <td><code>2000</code></td>
+            <td>Global requests per minute per client IP</td>
+          </tr>
+        </tbody>
+      </table>
 
       <h3 id="database">Database</h3>
       <table>

@@ -173,13 +173,36 @@ func (c *AuthController) Login(ctx *appctx.Context) {
               Must change in production — server refuses to start otherwise.
             </td>
           </tr>
+          <tr>
+            <td>
+              <code>JWT_TTL</code>
+            </td>
+            <td><code>24h</code></td>
+            <td>Access-token lifetime</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_REFRESH_TTL</code>
+            </td>
+            <td><code>168h</code></td>
+            <td>Refresh-token lifetime</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_ISSUER</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>iss</code> and required on validation</td>
+          </tr>
+          <tr>
+            <td>
+              <code>JWT_AUDIENCE</code>
+            </td>
+            <td>(empty)</td>
+            <td>When set, added as <code>aud</code> and required on validation</td>
+          </tr>
         </tbody>
       </table>
-      <p>
-        Access tokens expire in <strong>24 hours</strong>, refresh tokens in{" "}
-        <strong>7 days</strong>. Both values can be changed in{" "}
-        <code>pkg/auth/jwt.go</code>.
-      </p>
     </article>
   );
 }
