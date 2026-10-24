@@ -95,7 +95,7 @@ export default function InstallationPage() {
       {/* ── Step 1 ──────────────────────────────────── */}
       <h2 id="install-go">1. Install Go</h2>
       <p>
-        Ensure you have <strong>Go 1.24</strong> or later (see the framework{" "}
+        Ensure you have <strong>Go 1.27</strong> or later (see the framework{" "}
         <code>go.mod</code>).
       </p>
 
